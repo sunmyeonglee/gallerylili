@@ -1,14 +1,5 @@
 import type { Lang } from '@/contexts/LanguageContext'
 
-// 카테고리 레이블 — 스키마 설계 후 맞춰서 확장
-export const CATEGORY_LABELS: Record<string, { ko: string; en: string }> = {
-  all: { ko: '전체', en: 'All' },
-  painting: { ko: '회화', en: 'Painting' },
-  drawing: { ko: '드로잉', en: 'Drawing' },
-  printmaking: { ko: '판화', en: 'Printmaking' },
-  other: { ko: '기타', en: 'Other' },
-}
-
 export const ui = {
   nav: {
     works: { ko: '작품', en: 'Works' },
@@ -22,6 +13,7 @@ export const ui = {
     pageTitle: { ko: '작품', en: 'Works' },
   },
   artwork: {
+    artist: { ko: '작가', en: 'Artist' },
     year: { ko: '연도', en: 'Year' },
     medium: { ko: '재료', en: 'Medium' },
     dimensions: { ko: '크기', en: 'Dimensions' },
