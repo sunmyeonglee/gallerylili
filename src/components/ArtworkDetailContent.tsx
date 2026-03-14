@@ -57,21 +57,7 @@ export default function ArtworkDetailContent({
       {/* 캐러셀 */}
       <div>
         {images?.length > 0 && (
-          <ArtworkCarousel images={images} alt={titleMain} />
-        )}
-
-        {videoSrc && (
-          <div className="mt-8">
-            {videoFile ? (
-              <video src={videoSrc} controls playsInline className="w-full" />
-            ) : (
-              <iframe
-                src={videoSrc}
-                className="w-full aspect-video"
-                allowFullScreen
-              />
-            )}
-          </div>
+          <ArtworkCarousel images={images} alt={titleMain} videoSrc={videoSrc} isVideoFile={!!videoFile} />
         )}
       </div>
 

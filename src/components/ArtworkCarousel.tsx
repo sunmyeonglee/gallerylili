@@ -16,15 +16,19 @@ type ArtworkImage = {
 type Props = {
   images: ArtworkImage[]
   alt: string
+  videoSrc?: string | null
+  isVideoFile?: boolean
 }
 
-export default function ArtworkCarousel({ images, alt }: Props) {
+export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: Props) {
   const [index, setIndex] = useState(0)
   const [visible, setVisible] = useState(false)
   const [lightbox, setLightbox] = useState(false)
   const [lbIndex, setLbIndex] = useState(0)
   const [lbVisible, setLbVisible] = useState(false)
   const [lbOverlay, setLbOverlay] = useState(false)
+  const [videoOpen, setVideoOpen] = useState(false)
+  const [videoOverlay, setVideoOverlay] = useState(false)
 
   // 메인 캐러셀 이동
   const goTo = useCallback((next: number) => {
@@ -49,9 +53,9 @@ export default function ArtworkCarousel({ images, alt }: Props) {
 
   // ESC / 방향키
   useEffect(() => {
-    if (!lightbox) return
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setLightbox(false)
+      if (e.key === 'Escape') { setLightbox(false); setVideoOpen(false) }
+      if (!lightbox) return
       if (e.key === 'ArrowRight') lbGoTo((lbIndex + 1) % images.length)
       if (e.key === 'ArrowLeft') lbGoTo((lbIndex - 1 + images.length) % images.length)
     }
@@ -97,6 +101,25 @@ export default function ArtworkCarousel({ images, alt }: Props) {
                 aria-label="다음 이미지"
               >›</button>
             </>
+          )}
+
+          {/* 영상 버튼 */}
+          {videoSrc && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation()
+                setVideoOverlay(false)
+                setVideoOpen(true)
+                requestAnimationFrame(() => requestAnimationFrame(() => setVideoOverlay(true)))
+              }}
+              className="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1.5 bg-white/80 hover:bg-white transition-colors text-zinc-800 text-xs cursor-pointer"
+              aria-label="영상 재생"
+            >
+              <svg width="10" height="12" viewBox="0 0 10 12" fill="currentColor">
+                <path d="M0 0L10 6L0 12V0Z"/>
+              </svg>
+              Video
+            </button>
           )}
         </div>
 
@@ -168,6 +191,47 @@ export default function ArtworkCarousel({ images, alt }: Props) {
               >›</button>
             </>
           )}
+        </div>,
+        document.body
+      )}
+      {videoOpen && videoSrc && createPortal(
+        <div
+          style={{
+            position: 'fixed', inset: 0, zIndex: 9999,
+            backgroundColor: 'rgba(0,0,0,0.9)',
+            opacity: videoOverlay ? 1 : 0,
+            transition: 'opacity 0.3s ease',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            cursor: 'pointer',
+          }}
+          onClick={() => setVideoOpen(false)}
+        >
+          <div
+            style={{ width: '90vw', maxWidth: 960, cursor: 'default' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {isVideoFile ? (
+              <video
+                src={videoSrc}
+                controls
+                autoPlay
+                playsInline
+                style={{ width: '100%', maxHeight: '80vh' }}
+              />
+            ) : (
+              <iframe
+                src={videoSrc}
+                style={{ width: '100%', aspectRatio: '16/9', border: 'none' }}
+                allowFullScreen
+              />
+            )}
+          </div>
+
+          <button
+            onClick={() => setVideoOpen(false)}
+            style={{ position: 'absolute', top: 16, right: 16, color: 'rgba(255,255,255,0.7)', fontSize: 24, cursor: 'pointer', background: 'none', border: 'none' }}
+            aria-label="닫기"
+          >✕</button>
         </div>,
         document.body
       )}
