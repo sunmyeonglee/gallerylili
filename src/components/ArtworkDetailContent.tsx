@@ -3,12 +3,13 @@
 import { useLanguage } from "@/contexts/LanguageContext";
 import { t, pickLang, ui } from "@/lib/translations";
 import ArtworkCarousel from "@/components/ArtworkCarousel";
+import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
 type BilingualField = { ko?: string; en?: string } | null | undefined;
 
 type ArtworkImage = {
   _key: string;
-  asset: unknown;
+  asset: SanityImageSource;
   group?: string;
   caption?: string;
 };
@@ -42,7 +43,6 @@ export default function ArtworkDetailContent({
   const { lang } = useLanguage();
 
   const titleMain = pickLang(title?.ko, title?.en, lang);
-  const titleSub = lang === "ko" ? title?.en : title?.ko;
 
   const dimensionStr = dimensions
     ? [dimensions.width, dimensions.height, dimensions.depth]
