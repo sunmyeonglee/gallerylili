@@ -10,6 +10,14 @@ export const ARTWORKS_LIST_QUERY = defineQuery(`
   }
 `)
 
+export const ARTWORK_META_QUERY = defineQuery(`
+  *[_type == "artwork" && slug.current == $slug][0] {
+    title,
+    "description": description.ko,
+    "image": images[0].asset->url
+  }
+`)
+
 export const ARTWORK_DETAIL_QUERY = defineQuery(`
   *[_type == "artwork" && slug.current == $slug][0] {
     _id,

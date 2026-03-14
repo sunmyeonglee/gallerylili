@@ -49,7 +49,7 @@ export const artwork = defineType({
       title: '재료',
       type: 'object',
       fields: [
-        defineField({ name: 'ko', title: '한글', type: 'string', validation: (r) => r.required() }),
+        defineField({ name: 'ko', title: '한글', type: 'string' }),
         defineField({ name: 'en', title: '영문', type: 'string' }),
       ],
     }),
