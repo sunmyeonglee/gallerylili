@@ -69,19 +69,38 @@ export default function Header() {
 
         {/* 햄버거 버튼 (모바일) */}
         <button
-          className="md:hidden flex flex-col justify-center gap-1.5 w-6 h-6 cursor-pointer"
+          className="md:hidden flex items-center justify-center w-8 h-8 cursor-pointer"
           onClick={() => setMenuOpen((v) => !v)}
           aria-label="메뉴"
         >
-          <span
-            className={`block h-px bg-zinc-900 transition-all origin-center ${menuOpen ? "translate-y-1.25 rotate-45" : ""}`}
-          />
-          <span
-            className={`block h-px bg-zinc-900 transition-opacity ${menuOpen ? "opacity-0" : ""}`}
-          />
-          <span
-            className={`block h-px bg-zinc-900 transition-all origin-center ${menuOpen ? "-translate-y-2.25 -rotate-45" : ""}`}
-          />
+          <svg width="20" height="16" viewBox="0 0 20 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <line
+              x1="1" y1="2" x2="19" y2="2"
+              stroke="#18181b" strokeWidth="1.5" strokeLinecap="round"
+              style={{
+                transformOrigin: "10px 2px",
+                transform: menuOpen ? "translateY(6px) rotate(45deg)" : "none",
+                transition: "transform 0.2s ease",
+              }}
+            />
+            <line
+              x1="1" y1="8" x2="19" y2="8"
+              stroke="#18181b" strokeWidth="1.5" strokeLinecap="round"
+              style={{
+                opacity: menuOpen ? 0 : 1,
+                transition: "opacity 0.2s ease",
+              }}
+            />
+            <line
+              x1="1" y1="14" x2="19" y2="14"
+              stroke="#18181b" strokeWidth="1.5" strokeLinecap="round"
+              style={{
+                transformOrigin: "10px 14px",
+                transform: menuOpen ? "translateY(-6px) rotate(-45deg)" : "none",
+                transition: "transform 0.2s ease",
+              }}
+            />
+          </svg>
         </button>
       </div>
 
