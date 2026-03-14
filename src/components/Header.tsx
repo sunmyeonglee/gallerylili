@@ -17,20 +17,17 @@ export default function Header() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const iconColor = menuOpen ? "bg-zinc-900" : "bg-white";
-  const textColor = menuOpen ? "text-zinc-900" : "text-white";
-
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all ${
-        menuOpen ? "bg-white/70 backdrop-blur-md" : "mix-blend-difference"
+      className={`fixed top-0 left-0 right-0 z-50 transition-all bg-white ${
+        menuOpen ? "backdrop-blur-md" : ""
       }`}
     >
       {/* 상단 바 */}
       <div className="flex items-center justify-between px-5 md:px-8 py-6">
         <Link
           href="/"
-          className={`text-sm font-medium tracking-widest uppercase ${textColor}`}
+          className="text-sm font-medium tracking-widest uppercase text-zinc-900"
           onClick={() => setMenuOpen(false)}
         >
           Gallery Lili
@@ -40,18 +37,18 @@ export default function Header() {
         <nav className="hidden md:flex items-center gap-8">
           <Link
             href="/works"
-            className="text-sm tracking-wide text-white hover:opacity-60 transition-opacity"
+            className="text-sm tracking-wide text-zinc-900 hover:opacity-60 transition-opacity"
           >
             {t(ui.nav.works, lang)}
           </Link>
           <Link
             href="/about"
-            className="text-sm tracking-wide text-white hover:opacity-60 transition-opacity"
+            className="text-sm tracking-wide text-zinc-900 hover:opacity-60 transition-opacity"
           >
             {t(ui.nav.about, lang)}
           </Link>
 
-          <div className="flex items-center gap-1 text-sm tracking-wide text-white">
+          <div className="flex items-center gap-1 text-sm tracking-wide text-zinc-900">
             <button
               onClick={() => setLang("ko")}
               className={`cursor-pointer transition-opacity hover:opacity-60 ${lang === "ko" ? "opacity-100" : "opacity-40"}`}
@@ -77,13 +74,13 @@ export default function Header() {
           aria-label="메뉴"
         >
           <span
-            className={`block h-px transition-all origin-center ${iconColor} ${menuOpen ? "translate-y-1.25 rotate-45" : ""}`}
+            className={`block h-px bg-zinc-900 transition-all origin-center ${menuOpen ? "translate-y-1.25 rotate-45" : ""}`}
           />
           <span
-            className={`block h-px transition-opacity ${iconColor} ${menuOpen ? "opacity-0" : ""}`}
+            className={`block h-px bg-zinc-900 transition-opacity ${menuOpen ? "opacity-0" : ""}`}
           />
           <span
-            className={`block h-px transition-all origin-center ${iconColor} ${menuOpen ? "-translate-y-2.25 -rotate-45" : ""}`}
+            className={`block h-px bg-zinc-900 transition-all origin-center ${menuOpen ? "-translate-y-2.25 -rotate-45" : ""}`}
           />
         </button>
       </div>
