@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { t, ui } from "@/lib/translations";
 
 export default function Header() {
   const { lang, setLang } = useLanguage();
@@ -39,13 +38,13 @@ export default function Header() {
             href="/works"
             className="text-sm tracking-wide text-zinc-900 hover:opacity-60 transition-opacity"
           >
-            {t(ui.nav.works, lang)}
+            Works
           </Link>
           <Link
             href="/about"
             className="text-sm tracking-wide text-zinc-900 hover:opacity-60 transition-opacity"
           >
-            {t(ui.nav.about, lang)}
+            About
           </Link>
 
           <div className="flex items-center gap-1 text-sm tracking-wide text-zinc-900">
@@ -112,14 +111,14 @@ export default function Header() {
             className="text-sm tracking-wide text-zinc-900 hover:opacity-60 transition-opacity"
             onClick={() => setMenuOpen(false)}
           >
-            {t(ui.nav.works, lang)}
+            Works
           </Link>
           <Link
             href="/about"
             className="text-sm tracking-wide text-zinc-900 hover:opacity-60 transition-opacity"
             onClick={() => setMenuOpen(false)}
           >
-            {t(ui.nav.about, lang)}
+            About
           </Link>
 
           <div className="flex items-center gap-1 text-sm tracking-wide text-zinc-900">

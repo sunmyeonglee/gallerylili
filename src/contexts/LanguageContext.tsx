@@ -18,16 +18,17 @@ const LanguageContext = createContext<LanguageContextType>({
 
 export function LanguageProvider({ children }: { children: ReactNode }) {
   const [lang, setLangState] = useState<Lang>('ko')
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     const saved = localStorage.getItem('gallerylili-lang') as Lang | null
     if (saved === 'ko' || saved === 'en') {
       setLangState(saved)
     } else {
-      // 사용자가 명시적으로 선택한 적 없으면 브라우저 언어 사용
       const browserLang = navigator.language.toLowerCase()
       setLangState(browserLang.startsWith('ko') ? 'ko' : 'en')
     }
+    setMounted(true)
   }, [])
 
   const setLang = (next: Lang) => {
@@ -36,6 +37,8 @@ export function LanguageProvider({ children }: { children: ReactNode }) {
   }
 
   const toggleLang = () => setLang(lang === 'ko' ? 'en' : 'ko')
+
+  if (!mounted) return null
 
   return (
     <LanguageContext.Provider value={{ lang, setLang, toggleLang }}>

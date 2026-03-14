@@ -83,8 +83,8 @@ export default function ArtworkDetailContent({
 
         <dl className="flex flex-col gap-2 text-sm">
           {(artist?.name?.ko || artist?.name?.en) && (
-            <div className="flex gap-3">
-              <dt className="text-zinc-400 w-16 shrink-0">
+            <div className="grid gap-3" style={{ gridTemplateColumns: lang === "ko" ? "3.5rem 1fr" : "6rem 1fr" }}>
+              <dt className="text-zinc-400">
                 {t(ui.artwork.artist, lang)}
               </dt>
               <dd className="text-zinc-700">
@@ -93,16 +93,16 @@ export default function ArtworkDetailContent({
             </div>
           )}
           {year && (
-            <div className="flex gap-3">
-              <dt className="text-zinc-400 w-16 shrink-0">
+            <div className="grid gap-3" style={{ gridTemplateColumns: lang === "ko" ? "3.5rem 1fr" : "6rem 1fr" }}>
+              <dt className="text-zinc-400">
                 {t(ui.artwork.year, lang)}
               </dt>
               <dd className="text-zinc-700">{year}</dd>
             </div>
           )}
           {(medium?.ko || medium?.en) && (
-            <div className="flex gap-3">
-              <dt className="text-zinc-400 w-16 shrink-0">
+            <div className="grid gap-3" style={{ gridTemplateColumns: lang === "ko" ? "3.5rem 1fr" : "6rem 1fr" }}>
+              <dt className="text-zinc-400">
                 {t(ui.artwork.medium, lang)}
               </dt>
               <dd className="text-zinc-700">
@@ -111,8 +111,8 @@ export default function ArtworkDetailContent({
             </div>
           )}
           {dimensionStr && (
-            <div className="flex gap-3">
-              <dt className="text-zinc-400 w-16 shrink-0">
+            <div className="grid gap-3" style={{ gridTemplateColumns: lang === "ko" ? "3.5rem 1fr" : "6rem 1fr" }}>
+              <dt className="text-zinc-400">
                 {t(ui.artwork.dimensions, lang)}
               </dt>
               <dd className="text-zinc-700">{dimensionStr} mm</dd>
