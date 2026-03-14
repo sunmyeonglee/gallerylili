@@ -39,7 +39,7 @@ export default async function ArtworkPage({ params }: Props) {
   if (!artwork) notFound()
 
   return (
-    <main className="pt-28 pb-24 px-8 max-w-5xl mx-auto">
+    <main className="pt-28 pb-24 px-5 md:px-8 max-w-5xl mx-auto">
       <ArtworkDetailContent
         title={artwork.title}
         artist={artwork.artist}
