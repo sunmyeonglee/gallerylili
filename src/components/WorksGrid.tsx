@@ -29,7 +29,7 @@ export default function WorksGrid({ artworks }: Props) {
           <div className="relative aspect-4/3 overflow-hidden bg-zinc-100">
             {artwork.image && (
               <Image
-                src={urlFor(artwork.image).width(800).height(600).fit('crop').url()}
+                src={urlFor(artwork.image).width(600).height(450).fit('crop').format('webp').quality(80).url()}
                 alt={pickLang(artwork.title?.ko, artwork.title?.en, lang)}
                 fill
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"

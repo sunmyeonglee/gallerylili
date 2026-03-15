@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useEffect, useRef } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import Image from 'next/image'
 import { urlFor } from '@/sanity/lib/image'
@@ -21,13 +21,9 @@ type Props = {
 }
 
 export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: Props) {
-  const containerRef = useRef<HTMLDivElement>(null)
-
   // 메인 캐러셀
   const [index, setIndex] = useState(0)
   const [visible, setVisible] = useState(false)
-  const [blurVisible, setBlurVisible] = useState(false)
-  const [blurSize, setBlurSize] = useState<{ width: number; height: number } | null>(null)
 
   // 라이트박스
   const [lightbox, setLightbox] = useState(false)
@@ -44,8 +40,6 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
 
   const goTo = useCallback((next: number) => {
     setVisible(false)
-    setBlurVisible(false)
-    setBlurSize(null)
     setTimeout(() => setIndex(next), 200)
   }, [])
 
@@ -94,43 +88,16 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
       <div className="flex flex-col gap-4">
         {/* 메인 이미지 */}
         <div
-          ref={containerRef}
           className="relative w-full aspect-4/3 bg-zinc-100 overflow-hidden cursor-zoom-in"
           onClick={openLightbox}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            key={`blur-${index}`}
-            src={urlFor(current.asset).width(40).url()}
-            alt=""
-            aria-hidden="true"
-            onLoad={(e) => {
-              setBlurVisible(true)
-              const { naturalWidth: nw, naturalHeight: nh } = e.currentTarget
-              const c = containerRef.current
-              if (!c) return
-              const scale = Math.min(c.offsetWidth / nw, c.offsetHeight / nh)
-              setBlurSize({ width: Math.round(nw * scale), height: Math.round(nh * scale) })
-            }}
-            style={{
-              position: 'absolute',
-              top: '50%', left: '50%',
-              transform: 'translate(-50%, -50%) scale(1.05)',
-              width: blurSize?.width ?? 0,
-              height: blurSize?.height ?? 0,
-              objectFit: 'fill',
-              filter: 'blur(16px)',
-              opacity: blurVisible && !visible ? 1 : 0,
-              transition: 'opacity 0.4s ease',
-            }}
-          />
           <Image
             key={index}
-            src={urlFor(current.asset).width(1600).height(1200).fit('max').url()}
+            src={urlFor(current.asset).width(900).fit('max').format('webp').quality(80).url()}
             alt={current.caption ?? alt}
             fill
             sizes="(max-width: 768px) 100vw, 60vw"
-            className="object-contain"
+            className="object-cover"
             priority={index === 0}
             onLoad={() => setVisible(true)}
             style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.4s ease' }}
@@ -232,7 +199,7 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             key={`lb-${lbIndex}`}
-            src={urlFor(lbCurrent.asset).width(2400).fit('max').url()}
+            src={urlFor(lbCurrent.asset).width(2400).fit('max').format('webp').quality(85).url()}
             alt={lbCurrent.caption ?? alt}
             onLoad={() => setLbVisible(true)}
             style={{
