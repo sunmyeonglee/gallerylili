@@ -19,6 +19,10 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 @keyframes page-fade-in {
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }

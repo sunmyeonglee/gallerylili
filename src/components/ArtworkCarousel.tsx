@@ -26,9 +26,12 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
   const [lightbox, setLightbox] = useState(false)
   const [lbIndex, setLbIndex] = useState(0)
   const [lbVisible, setLbVisible] = useState(false)
+  const [lbBlurVisible, setLbBlurVisible] = useState(false)
+  const [lbBlurSize, setLbBlurSize] = useState<{ width: number; height: number } | null>(null)
   const [lbOverlay, setLbOverlay] = useState(false)
   const [videoOpen, setVideoOpen] = useState(false)
   const [videoOverlay, setVideoOverlay] = useState(false)
+  const [videoLoaded, setVideoLoaded] = useState(false)
 
   // 메인 캐러셀 이동
   const goTo = useCallback((next: number) => {
@@ -39,6 +42,8 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
   // 라이트박스 이동
   const lbGoTo = useCallback((next: number) => {
     setLbVisible(false)
+    setLbBlurVisible(false)
+    setLbBlurSize(null)
     setTimeout(() => setLbIndex(next), 200)
   }, [])
 
@@ -46,9 +51,21 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
   const openLightbox = () => {
     setLbIndex(index)
     setLbVisible(false)
+    setLbBlurVisible(false)
+    setLbBlurSize(null)
     setLbOverlay(false)
     setLightbox(true)
     requestAnimationFrame(() => requestAnimationFrame(() => setLbOverlay(true)))
+  }
+
+  // 블러 이미지 로드 시 실제 렌더링 크기 계산
+  const handleBlurLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    setLbBlurVisible(true)
+    const { naturalWidth: nw, naturalHeight: nh } = e.currentTarget
+    const maxW = window.innerWidth * 0.9
+    const maxH = window.innerHeight * 0.9
+    const scale = Math.min(maxW / nw, maxH / nh)
+    setLbBlurSize({ width: nw * scale, height: nh * scale })
   }
 
   // ESC / 방향키
@@ -109,6 +126,7 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
               onClick={(e) => {
                 e.stopPropagation()
                 setVideoOverlay(false)
+                setVideoLoaded(false)
                 setVideoOpen(true)
                 requestAnimationFrame(() => requestAnimationFrame(() => setVideoOverlay(true)))
               }}
@@ -156,6 +174,31 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
           }}
           onClick={() => setLightbox(false)}
         >
+          <div
+            style={{
+              position: 'absolute',
+              width: lbBlurSize?.width ?? 0,
+              height: lbBlurSize?.height ?? 0,
+              overflow: 'hidden',
+              opacity: lbBlurVisible && !lbVisible ? 1 : 0,
+              transition: 'opacity 0.4s ease',
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              key={`lb-blur-${lbIndex}`}
+              src={urlFor(lbCurrent.asset).width(40).url()}
+              alt=""
+              aria-hidden="true"
+              onLoad={handleBlurLoad}
+              style={{
+                width: '100%', height: '100%',
+                objectFit: 'contain',
+                filter: 'blur(20px)',
+                transform: 'scale(1.1)',
+              }}
+            />
+          </div>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             key={`lb-${lbIndex}`}
@@ -164,7 +207,7 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
             onClick={(e) => e.stopPropagation()}
             onLoad={() => setLbVisible(true)}
             style={{
-              maxWidth: '90vw', maxHeight: '90vh',
+              width: '90vw', height: '90vh',
               objectFit: 'contain', cursor: 'default',
               opacity: lbVisible ? 1 : 0,
               transition: 'opacity 0.4s ease',
@@ -207,22 +250,36 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
           onClick={() => setVideoOpen(false)}
         >
           <div
-            style={{ width: '90vw', maxWidth: 960, cursor: 'default' }}
-            onClick={(e) => e.stopPropagation()}
+            style={{ width: '90vw', maxWidth: 960, position: 'relative' }}
           >
             {isVideoFile ? (
-              <video
-                src={videoSrc}
-                controls
-                autoPlay
-                playsInline
-                style={{ width: '100%', maxHeight: '80vh' }}
-              />
+              <>
+                {!videoLoaded && (
+                  <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{
+                      width: 36, height: 36, borderRadius: '50%',
+                      border: '2px solid rgba(255,255,255,0.2)',
+                      borderTopColor: 'rgba(255,255,255,0.8)',
+                      animation: 'spin 0.8s linear infinite',
+                    }} />
+                  </div>
+                )}
+                <video
+                  src={videoSrc}
+                  controls
+                  autoPlay
+                  playsInline
+                  onCanPlay={() => setVideoLoaded(true)}
+                  onClick={(e) => e.stopPropagation()}
+                  style={{ width: 'auto', maxWidth: '100%', maxHeight: '80vh', display: 'block', margin: '0 auto', opacity: videoLoaded ? 1 : 0, transition: 'opacity 0.6s ease' }}
+                />
+              </>
             ) : (
               <iframe
                 src={videoSrc}
                 style={{ width: '100%', aspectRatio: '16/9', border: 'none' }}
                 allowFullScreen
+                onClick={(e) => e.stopPropagation()}
               />
             )}
           </div>
