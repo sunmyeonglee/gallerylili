@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import Image from 'next/image'
 import { urlFor } from '@/sanity/lib/image'
@@ -21,25 +21,34 @@ type Props = {
 }
 
 export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: Props) {
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  // 메인 캐러셀
   const [index, setIndex] = useState(0)
   const [visible, setVisible] = useState(false)
+  const [blurVisible, setBlurVisible] = useState(false)
+  const [blurSize, setBlurSize] = useState<{ width: number; height: number } | null>(null)
+
+  // 라이트박스
   const [lightbox, setLightbox] = useState(false)
   const [lbIndex, setLbIndex] = useState(0)
   const [lbVisible, setLbVisible] = useState(false)
   const [lbBlurVisible, setLbBlurVisible] = useState(false)
   const [lbBlurSize, setLbBlurSize] = useState<{ width: number; height: number } | null>(null)
   const [lbOverlay, setLbOverlay] = useState(false)
+
+  // 비디오
   const [videoOpen, setVideoOpen] = useState(false)
   const [videoOverlay, setVideoOverlay] = useState(false)
   const [videoLoaded, setVideoLoaded] = useState(false)
 
-  // 메인 캐러셀 이동
   const goTo = useCallback((next: number) => {
     setVisible(false)
+    setBlurVisible(false)
+    setBlurSize(null)
     setTimeout(() => setIndex(next), 200)
   }, [])
 
-  // 라이트박스 이동
   const lbGoTo = useCallback((next: number) => {
     setLbVisible(false)
     setLbBlurVisible(false)
@@ -47,7 +56,6 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
     setTimeout(() => setLbIndex(next), 200)
   }, [])
 
-  // 라이트박스 열 때 현재 메인 index로 동기화
   const openLightbox = () => {
     setLbIndex(index)
     setLbVisible(false)
@@ -58,17 +66,13 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
     requestAnimationFrame(() => requestAnimationFrame(() => setLbOverlay(true)))
   }
 
-  // 블러 이미지 로드 시 실제 렌더링 크기 계산
-  const handleBlurLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
+  const handleLbBlurLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
     setLbBlurVisible(true)
     const { naturalWidth: nw, naturalHeight: nh } = e.currentTarget
-    const maxW = window.innerWidth * 0.9
-    const maxH = window.innerHeight * 0.9
-    const scale = Math.min(maxW / nw, maxH / nh)
+    const scale = Math.min((window.innerWidth * 0.9) / nw, (window.innerHeight * 0.9) / nh)
     setLbBlurSize({ width: nw * scale, height: nh * scale })
   }
 
-  // ESC / 방향키
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') { setLightbox(false); setVideoOpen(false) }
@@ -90,9 +94,36 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
       <div className="flex flex-col gap-4">
         {/* 메인 이미지 */}
         <div
+          ref={containerRef}
           className="relative w-full aspect-4/3 bg-zinc-100 overflow-hidden cursor-zoom-in"
           onClick={openLightbox}
         >
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            key={`blur-${index}`}
+            src={urlFor(current.asset).width(40).url()}
+            alt=""
+            aria-hidden="true"
+            onLoad={(e) => {
+              setBlurVisible(true)
+              const { naturalWidth: nw, naturalHeight: nh } = e.currentTarget
+              const c = containerRef.current
+              if (!c) return
+              const scale = Math.min(c.offsetWidth / nw, c.offsetHeight / nh)
+              setBlurSize({ width: Math.round(nw * scale), height: Math.round(nh * scale) })
+            }}
+            style={{
+              position: 'absolute',
+              top: '50%', left: '50%',
+              transform: 'translate(-50%, -50%) scale(1.05)',
+              width: blurSize?.width ?? 0,
+              height: blurSize?.height ?? 0,
+              objectFit: 'fill',
+              filter: 'blur(16px)',
+              opacity: blurVisible && !visible ? 1 : 0,
+              transition: 'opacity 0.4s ease',
+            }}
+          />
           <Image
             key={index}
             src={urlFor(current.asset).width(1600).height(1200).fit('max').url()}
@@ -120,7 +151,6 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
             </>
           )}
 
-          {/* 영상 버튼 */}
           {videoSrc && (
             <button
               onClick={(e) => {
@@ -170,10 +200,12 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
             opacity: lbOverlay ? 1 : 0,
             transition: 'opacity 0.3s ease',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            cursor: 'zoom-out',
+            overflow: 'hidden',
+            cursor: 'default',
           }}
-          onClick={() => setLightbox(false)}
+          onClick={(e) => { if (e.target === e.currentTarget) setLightbox(false) }}
         >
+          {/* 블러 플레이스홀더 */}
           <div
             style={{
               position: 'absolute',
@@ -182,6 +214,7 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
               overflow: 'hidden',
               opacity: lbBlurVisible && !lbVisible ? 1 : 0,
               transition: 'opacity 0.4s ease',
+              pointerEvents: 'none',
             }}
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -190,25 +223,21 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
               src={urlFor(lbCurrent.asset).width(40).url()}
               alt=""
               aria-hidden="true"
-              onLoad={handleBlurLoad}
-              style={{
-                width: '100%', height: '100%',
-                objectFit: 'contain',
-                filter: 'blur(20px)',
-                transform: 'scale(1.1)',
-              }}
+              onLoad={handleLbBlurLoad}
+              style={{ width: '100%', height: '100%', objectFit: 'fill', filter: 'blur(20px)', transform: 'scale(1.1)' }}
             />
           </div>
+
+          {/* 메인 이미지 */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             key={`lb-${lbIndex}`}
             src={urlFor(lbCurrent.asset).width(2400).fit('max').url()}
             alt={lbCurrent.caption ?? alt}
-            onClick={(e) => e.stopPropagation()}
             onLoad={() => setLbVisible(true)}
             style={{
-              width: '90vw', height: '90vh',
-              objectFit: 'contain', cursor: 'default',
+              width: 'auto', height: 'auto', maxWidth: '90vw', maxHeight: '90vh',
+              cursor: 'default',
               opacity: lbVisible ? 1 : 0,
               transition: 'opacity 0.4s ease',
             }}
@@ -223,12 +252,12 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
           {images.length > 1 && (
             <>
               <button
-                onClick={(e) => { e.stopPropagation(); lbGoTo((lbIndex - 1 + images.length) % images.length) }}
+                onClick={() => lbGoTo((lbIndex - 1 + images.length) % images.length)}
                 style={{ position: 'absolute', left: 0, top: 0, width: 64, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.7)', fontSize: 32, cursor: 'pointer', background: 'none', border: 'none' }}
                 aria-label="이전 이미지"
               >‹</button>
               <button
-                onClick={(e) => { e.stopPropagation(); lbGoTo((lbIndex + 1) % images.length) }}
+                onClick={() => lbGoTo((lbIndex + 1) % images.length)}
                 style={{ position: 'absolute', right: 0, top: 0, width: 64, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.7)', fontSize: 32, cursor: 'pointer', background: 'none', border: 'none' }}
                 aria-label="다음 이미지"
               >›</button>
@@ -237,6 +266,7 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
         </div>,
         document.body
       )}
+
       {videoOpen && videoSrc && createPortal(
         <div
           style={{
@@ -249,37 +279,28 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
           }}
           onClick={() => setVideoOpen(false)}
         >
-          <div
-            style={{ width: '90vw', maxWidth: 960, position: 'relative' }}
-          >
+          {!videoLoaded && isVideoFile && (
+            <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
+              <div className="spinner" />
+            </div>
+          )}
+
+          <div style={{ width: '90vw', maxWidth: 960, position: 'relative' }}>
             {isVideoFile ? (
-              <>
-                {!videoLoaded && (
-                  <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <div style={{
-                      width: 36, height: 36, borderRadius: '50%',
-                      border: '2px solid rgba(255,255,255,0.2)',
-                      borderTopColor: 'rgba(255,255,255,0.8)',
-                      animation: 'spin 0.8s linear infinite',
-                    }} />
-                  </div>
-                )}
-                <video
-                  src={videoSrc}
-                  controls
-                  autoPlay
-                  playsInline
-                  onCanPlay={() => setVideoLoaded(true)}
-                  onClick={(e) => e.stopPropagation()}
-                  style={{ width: 'auto', maxWidth: '100%', maxHeight: '80vh', display: 'block', margin: '0 auto', opacity: videoLoaded ? 1 : 0, transition: 'opacity 0.6s ease' }}
-                />
-              </>
+              <video
+                src={videoSrc}
+                controls
+                autoPlay
+                playsInline
+                onCanPlay={() => setVideoLoaded(true)}
+                onClick={(e) => e.stopPropagation()}
+                style={{ width: 'auto', maxWidth: '100%', maxHeight: '80vh', display: 'block', margin: '0 auto', opacity: videoLoaded ? 1 : 0, transition: 'opacity 0.6s ease' }}
+              />
             ) : (
               <iframe
                 src={videoSrc}
                 style={{ width: '100%', aspectRatio: '16/9', border: 'none' }}
                 allowFullScreen
-                onClick={(e) => e.stopPropagation()}
               />
             )}
           </div>
