@@ -2,11 +2,15 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Header() {
+  const pathname = usePathname();
   const { lang, setLang } = useLanguage();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  if (pathname?.startsWith("/studio")) return null;
 
   useEffect(() => {
     const handleResize = () => {

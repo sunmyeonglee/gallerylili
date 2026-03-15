@@ -173,7 +173,7 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
 
           <button
             onClick={() => setLightbox(false)}
-            style={{ position: 'absolute', top: 16, right: 16, color: 'rgba(255,255,255,0.7)', fontSize: 24, cursor: 'pointer', background: 'none', border: 'none' }}
+            style={{ position: 'absolute', top: 16, right: 16, zIndex: 1, color: 'rgba(255,255,255,0.7)', fontSize: 24, cursor: 'pointer', background: 'none', border: 'none' }}
             aria-label="닫기"
           >✕</button>
 
@@ -181,12 +181,12 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
             <>
               <button
                 onClick={(e) => { e.stopPropagation(); lbGoTo((lbIndex - 1 + images.length) % images.length) }}
-                style={{ position: 'absolute', left: 16, top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.7)', fontSize: 32, cursor: 'pointer', background: 'none', border: 'none' }}
+                style={{ position: 'absolute', left: 0, top: 0, width: 64, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.7)', fontSize: 32, cursor: 'pointer', background: 'none', border: 'none' }}
                 aria-label="이전 이미지"
               >‹</button>
               <button
                 onClick={(e) => { e.stopPropagation(); lbGoTo((lbIndex + 1) % images.length) }}
-                style={{ position: 'absolute', right: 16, top: '50%', transform: 'translateY(-50%)', color: 'rgba(255,255,255,0.7)', fontSize: 32, cursor: 'pointer', background: 'none', border: 'none' }}
+                style={{ position: 'absolute', right: 0, top: 0, width: 64, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.7)', fontSize: 32, cursor: 'pointer', background: 'none', border: 'none' }}
                 aria-label="다음 이미지"
               >›</button>
             </>
