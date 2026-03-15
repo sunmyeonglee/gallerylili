@@ -20,10 +20,10 @@ body {
 }
 
 @keyframes page-fade-in {
-  from { opacity: 0; transform: translateY(6px); }
+  from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
 .page-transition {
-  animation: page-fade-in 0.3s ease forwards;
+  animation: page-fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }

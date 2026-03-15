@@ -4,6 +4,7 @@ import { LanguageProvider } from "@/contexts/LanguageContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PageTransition from "@/components/PageTransition";
+import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
 
 const notoSansKR = Noto_Sans_KR({
@@ -29,6 +30,7 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <LanguageProvider>
+          <NextTopLoader color="#18181b" height={2} showSpinner={false} />
           <Header />
           <PageTransition>{children}</PageTransition>
           <Footer />
