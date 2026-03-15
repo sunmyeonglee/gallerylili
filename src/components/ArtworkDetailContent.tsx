@@ -19,10 +19,7 @@ type Props = {
   artist: { name: BilingualField } | null | undefined;
   year: string | null | undefined;
   medium: BilingualField;
-  dimensions:
-    | { width?: number; height?: number; depth?: number }
-    | null
-    | undefined;
+  dimensions: { ko?: string; en?: string } | { width?: number; height?: number; depth?: number } | null | undefined;
   description: BilingualField;
   images: ArtworkImage[];
   videoFile: { asset: { url: string } } | null | undefined;
@@ -44,11 +41,15 @@ export default function ArtworkDetailContent({
 
   const titleMain = pickLang(title?.ko, title?.en, lang);
 
-  const dimensionStr = dimensions
-    ? [dimensions.width, dimensions.height, dimensions.depth]
-        .filter(Boolean)
-        .join(" × ")
-    : null;
+  const dimensionStr = !dimensions
+    ? null
+    : 'ko' in dimensions || 'en' in dimensions
+    ? pickLang((dimensions as {ko?: string; en?: string}).ko, (dimensions as {ko?: string; en?: string}).en, lang)
+    : (() => {
+        const d = dimensions as {width?: number; height?: number; depth?: number}
+        const parts = [d.width, d.height, d.depth].filter(Boolean)
+        return parts.length ? parts.join(' × ') + ' mm' : null
+      })()
 
   const videoSrc = videoFile?.asset?.url ?? videoUrl ?? null;
 
@@ -101,7 +102,7 @@ export default function ArtworkDetailContent({
               <dt className="text-zinc-400">
                 {t(ui.artwork.dimensions, lang)}
               </dt>
-              <dd className="text-zinc-700">{dimensionStr} mm</dd>
+              <dd className="text-zinc-700">{dimensionStr}</dd>
             </div>
           )}
         </dl>
