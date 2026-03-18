@@ -13,9 +13,34 @@ const notoSansKR = Noto_Sans_KR({
   variable: "--font-sans",
 });
 
+const siteUrl = "https://www.gallerylili.com";
+
 export const metadata: Metadata = {
-  title: "Gallery Lili",
-  description: "Gallery Lili — Official Website",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "Gallery Lili",
+    template: "%s — Gallery Lili",
+  },
+  description:
+    "갤러리 릴리는 키네틱 아트, 오토마타, 움직이는 조형물을 전문으로 하는 갤러리입니다. Gallery Lili specializes in kinetic art, automata, and moving sculptural works.",
+  openGraph: {
+    type: "website",
+    locale: "ko_KR",
+    url: siteUrl,
+    siteName: "Gallery Lili",
+    title: "Gallery Lili",
+    description:
+      "갤러리 릴리는 키네틱 아트, 오토마타, 움직이는 조형물을 전문으로 하는 갤러리입니다.",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Gallery Lili",
+    description:
+      "갤러리 릴리는 키네틱 아트, 오토마타, 움직이는 조형물을 전문으로 하는 갤러리입니다.",
+  },
+  alternates: {
+    canonical: siteUrl,
+  },
 };
 
 export default function RootLayout({
