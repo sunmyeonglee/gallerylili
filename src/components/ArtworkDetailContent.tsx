@@ -54,16 +54,14 @@ export default function ArtworkDetailContent({
   const videoSrc = videoFile?.asset?.url ?? videoUrl ?? null;
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-12 lg:gap-16">
+    <div className="flex flex-col gap-10">
       {/* 캐러셀 */}
-      <div>
-        {images?.length > 0 && (
-          <ArtworkCarousel images={images} alt={titleMain} videoSrc={videoSrc} isVideoFile={!!videoFile} />
-        )}
-      </div>
+      {images?.length > 0 && (
+        <ArtworkCarousel images={images} alt={titleMain} videoSrc={videoSrc} isVideoFile={!!videoFile} />
+      )}
 
       {/* 작품 정보 */}
-      <div className="flex flex-col gap-6 lg:pt-2">
+      <div className="flex flex-col gap-6 max-w-lg mx-auto w-full">
         <div>
           <h1 className="text-xl font-medium text-zinc-900">{titleMain}</h1>
         </div>
@@ -116,3 +114,4 @@ export default function ArtworkDetailContent({
     </div>
   );
 }
+

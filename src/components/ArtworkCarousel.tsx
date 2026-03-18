@@ -88,16 +88,33 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
       <div className="flex flex-col gap-4">
         {/* 메인 이미지 */}
         <div
-          className="relative w-full aspect-4/3 bg-zinc-100 overflow-hidden cursor-zoom-in"
+          className="relative w-full aspect-4/3 max-h-[60vh] overflow-hidden cursor-zoom-in"
           onClick={openLightbox}
         >
+          {/* 블러 배경 */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            key={`bg-${index}`}
+            src={urlFor(current.asset).width(40).url()}
+            alt=""
+            aria-hidden="true"
+            style={{
+              position: 'absolute', inset: 0,
+              width: '100%', height: '100%',
+              objectFit: 'cover',
+              filter: 'blur(24px) saturate(1.1)',
+              transform: 'scale(1.1)',
+              opacity: visible ? 1 : 0,
+              transition: 'opacity 0.4s ease',
+            }}
+          />
           <Image
             key={index}
             src={urlFor(current.asset).width(900).fit('max').format('webp').quality(80).url()}
             alt={current.caption ?? alt}
             fill
             sizes="(max-width: 768px) 100vw, 60vw"
-            className="object-cover"
+            className="object-contain py-3"
             priority={index === 0}
             onLoad={() => setVisible(true)}
             style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.4s ease' }}
