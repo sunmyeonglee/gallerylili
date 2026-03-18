@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Noto_Sans_KR } from "next/font/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -61,6 +62,7 @@ export default function RootLayout({
           <Footer />
         </LanguageProvider>
       </body>
+      <GoogleAnalytics gaId="G-KMV2P4B7DJ" />
     </html>
   );
 }
