@@ -24,6 +24,9 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
   // 메인 캐러셀
   const [index, setIndex] = useState(0)
   const [visible, setVisible] = useState(false)
+  const [isPortrait, setIsPortrait] = useState(false)
+  const [isVeryWide, setIsVeryWide] = useState(false)
+  const [blurBgVisible, setBlurBgVisible] = useState(false)
 
   // 라이트박스
   const [lightbox, setLightbox] = useState(false)
@@ -40,6 +43,7 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
 
   const goTo = useCallback((next: number) => {
     setVisible(false)
+    setBlurBgVisible(false)
     setTimeout(() => setIndex(next), 200)
   }, [])
 
@@ -98,13 +102,14 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
             src={urlFor(current.asset).width(40).url()}
             alt=""
             aria-hidden="true"
+            onLoad={() => setBlurBgVisible(true)}
             style={{
               position: 'absolute', inset: 0,
               width: '100%', height: '100%',
               objectFit: 'cover',
               filter: 'blur(24px) saturate(1.1)',
               transform: 'scale(1.1)',
-              opacity: visible ? 1 : 0,
+              opacity: blurBgVisible && (!visible || isPortrait || isVeryWide) ? 1 : 0,
               transition: 'opacity 0.4s ease',
             }}
           />
@@ -114,9 +119,15 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
             alt={current.caption ?? alt}
             fill
             sizes="(max-width: 768px) 100vw, 60vw"
-            className="object-contain py-3"
+            className={(isPortrait || isVeryWide) ? 'object-contain py-3' : 'object-cover'}
             priority={index === 0}
-            onLoad={() => setVisible(true)}
+            onLoad={(e) => {
+              const img = e.currentTarget as HTMLImageElement
+              const { naturalWidth: nw, naturalHeight: nh } = img
+              setIsPortrait(nh > nw)
+              setIsVeryWide(nw >= nh * 2)
+              setVisible(true)
+            }}
             style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.4s ease' }}
           />
 
