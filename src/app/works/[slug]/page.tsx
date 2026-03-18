@@ -33,7 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: description.slice(0, 160),
       url: `https://www.gallerylili.com/works/${slug}`,
       ...(data.image && {
-        images: [{ url: data.image, width: 1200, height: 630, alt: title }],
+        images: [{ url: `${data.image}?w=1200&h=630&fit=crop&auto=format`, width: 1200, height: 630, alt: title }],
       }),
     },
   };
