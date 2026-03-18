@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Noto_Sans_KR } from "next/font/google";
+import { Inter } from "next/font/google";
 import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import Header from "@/components/Header";
@@ -8,7 +8,7 @@ import PageTransition from "@/components/PageTransition";
 import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
 
-const notoSansKR = Noto_Sans_KR({
+const inter = Inter({
   subsets: ["latin"],
   weight: ["300", "400", "500"],
   variable: "--font-sans",
@@ -52,7 +52,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body
-        className={`${notoSansKR.variable} font-sans antialiased`}
+        className={`${inter.variable} font-sans antialiased`}
         suppressHydrationWarning
       >
         <LanguageProvider>
