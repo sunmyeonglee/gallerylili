@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { client } from "@/sanity/lib/client";
-import { ARTWORK_DETAIL_QUERY, ARTWORK_META_QUERY } from "@/sanity/lib/queries";
+import { ARTWORK_DETAIL_QUERY, ARTWORK_META_QUERY, ARTWORK_SLUGS_QUERY } from "@/sanity/lib/queries";
 import ArtworkDetailContent from "@/components/ArtworkDetailContent";
 
 export const revalidate = 60;
@@ -9,6 +9,11 @@ export const revalidate = 60;
 type Props = {
   params: Promise<{ slug: string }>;
 };
+
+export async function generateStaticParams() {
+  const artworks = await client.fetch(ARTWORK_SLUGS_QUERY);
+  return artworks.map((a: { slug: string }) => ({ slug: a.slug }));
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -20,11 +25,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const description = data.description ?? "";
 
   return {
-    title: `${title} — Gallery Lili`,
+    title,
     description: description.slice(0, 160),
+    alternates: { canonical: `https://www.gallerylili.com/works/${slug}` },
     openGraph: {
       title,
       description: description.slice(0, 160),
+      url: `https://www.gallerylili.com/works/${slug}`,
       ...(data.image && {
         images: [{ url: data.image, width: 1200, height: 630, alt: title }],
       }),
@@ -38,8 +45,36 @@ export default async function ArtworkPage({ params }: Props) {
 
   if (!artwork) notFound();
 
+  const title = artwork.title?.ko ?? artwork.title?.en ?? "";
+  const artistName = artwork.artist?.name?.ko ?? artwork.artist?.name?.en ?? "";
+  const imageUrl = artwork.images?.[0]?.asset?.url;
+
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "VisualArtwork",
+    name: title,
+    ...(artistName && {
+      creator: { "@type": "Person", name: artistName },
+    }),
+    ...(artwork.year && { dateCreated: artwork.year }),
+    ...(artwork.medium?.ko && { artMedium: artwork.medium.ko }),
+    ...(artwork.dimensions?.ko && { size: artwork.dimensions.ko }),
+    ...(artwork.description?.ko && { description: artwork.description.ko }),
+    ...(imageUrl && { image: imageUrl }),
+    url: `https://www.gallerylili.com/works/${slug}`,
+    isPartOf: {
+      "@type": "ArtGallery",
+      name: "Gallery Lili",
+      url: "https://www.gallerylili.com",
+    },
+  };
+
   return (
     <main className="pt-28 pb-24 px-5 md:px-8 max-w-5xl mx-auto">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <ArtworkDetailContent
         title={artwork.title}
         artist={artwork.artist}

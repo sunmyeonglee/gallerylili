@@ -10,6 +10,10 @@ export const ARTWORKS_LIST_QUERY = defineQuery(`
   }
 `)
 
+export const ARTWORK_SLUGS_QUERY = defineQuery(`
+  *[_type == "artwork" && defined(slug.current)]{ "slug": slug.current }
+`)
+
 export const ARTWORK_META_QUERY = defineQuery(`
   *[_type == "artwork" && slug.current == $slug][0] {
     title,
@@ -26,7 +30,7 @@ export const ARTWORK_DETAIL_QUERY = defineQuery(`
     medium,
     dimensions,
     description,
-    images,
+    images[]{ ..., asset-> },
     videoFile { asset-> },
     videoUrl,
     "artist": artist->{ name }

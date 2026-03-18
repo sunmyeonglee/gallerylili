@@ -39,7 +39,7 @@ export default function Header() {
         {/* 데스크탑 nav */}
         <nav className="hidden md:flex items-center gap-8">
           <Link
-            href="/works"
+            href="/"
             className="text-sm tracking-wide text-zinc-900 hover:opacity-60 transition-opacity"
           >
             Works
@@ -111,7 +111,7 @@ export default function Header() {
       {menuOpen && (
         <nav className="md:hidden flex flex-col px-5 pb-8 gap-6">
           <Link
-            href="/works"
+            href="/"
             className="text-sm tracking-wide text-zinc-900 hover:opacity-60 transition-opacity"
             onClick={() => setMenuOpen(false)}
           >

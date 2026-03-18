@@ -9,8 +9,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const artworks = await client.fetch(SLUGS_QUERY)
 
   return [
-    { url: base, lastModified: new Date(), changeFrequency: 'monthly', priority: 1 },
-    { url: `${base}/works`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
+    { url: base, lastModified: new Date(), changeFrequency: 'weekly', priority: 1 },
     { url: `${base}/about`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
     ...artworks.map((a: { slug: string; _updatedAt: string }) => ({
       url: `${base}/works/${a.slug}`,
