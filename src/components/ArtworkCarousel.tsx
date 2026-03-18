@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import Image from 'next/image'
 import { urlFor } from '@/sanity/lib/image'
@@ -21,6 +21,9 @@ type Props = {
 }
 
 export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: Props) {
+  const goToTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const lbGoToTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
   // 메인 캐러셀
   const [index, setIndex] = useState(0)
   const [visible, setVisible] = useState(false)
@@ -41,17 +44,26 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
   const [videoOverlay, setVideoOverlay] = useState(false)
   const [videoLoaded, setVideoLoaded] = useState(false)
 
+  useEffect(() => {
+    return () => {
+      if (goToTimer.current) clearTimeout(goToTimer.current)
+      if (lbGoToTimer.current) clearTimeout(lbGoToTimer.current)
+    }
+  }, [])
+
   const goTo = useCallback((next: number) => {
+    if (goToTimer.current) clearTimeout(goToTimer.current)
     setVisible(false)
     setBlurBgVisible(false)
-    setTimeout(() => setIndex(next), 200)
+    goToTimer.current = setTimeout(() => setIndex(next), 200)
   }, [])
 
   const lbGoTo = useCallback((next: number) => {
+    if (lbGoToTimer.current) clearTimeout(lbGoToTimer.current)
     setLbVisible(false)
     setLbBlurVisible(false)
     setLbBlurSize(null)
-    setTimeout(() => setLbIndex(next), 200)
+    lbGoToTimer.current = setTimeout(() => setLbIndex(next), 200)
   }, [])
 
   const openLightbox = () => {
@@ -61,6 +73,7 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
     setLbBlurSize(null)
     setLbOverlay(false)
     setLightbox(true)
+    // double RAF: 첫 번째 프레임에서 opacity:0 상태를 브라우저가 그린 뒤 두 번째 프레임에서 1로 변경해야 transition이 동작함
     requestAnimationFrame(() => requestAnimationFrame(() => setLbOverlay(true)))
   }
 
@@ -121,6 +134,7 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
             sizes="(max-width: 768px) 100vw, 60vw"
             className={(isPortrait || isVeryWide) ? 'object-contain py-3' : 'object-cover'}
             priority={index === 0}
+            onError={() => setVisible(true)}
             onLoad={(e) => {
               const img = e.currentTarget as HTMLImageElement
               const { naturalWidth: nw, naturalHeight: nh } = img
@@ -230,6 +244,7 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
             src={urlFor(lbCurrent.asset).width(2400).fit('max').format('webp').quality(85).url()}
             alt={lbCurrent.caption ?? alt}
             onLoad={() => setLbVisible(true)}
+            onError={() => setLbVisible(true)}
             style={{
               width: 'auto', height: 'auto', maxWidth: '90vw', maxHeight: '90vh',
               cursor: 'default',

@@ -19,7 +19,7 @@ type Props = {
   artist: { name: BilingualField } | null | undefined;
   year: string | null | undefined;
   medium: BilingualField;
-  dimensions: { ko?: string; en?: string } | { width?: number; height?: number; depth?: number } | null | undefined;
+  dimensions: { ko?: string; en?: string } | null | undefined;
   description: BilingualField;
   images: ArtworkImage[];
   videoFile: { asset: { url: string } } | null | undefined;
@@ -41,17 +41,10 @@ export default function ArtworkDetailContent({
 
   const titleMain = pickLang(title?.ko, title?.en, lang);
 
-  const dimensionStr = !dimensions
-    ? null
-    : 'ko' in dimensions || 'en' in dimensions
-    ? pickLang((dimensions as {ko?: string; en?: string}).ko, (dimensions as {ko?: string; en?: string}).en, lang)
-    : (() => {
-        const d = dimensions as {width?: number; height?: number; depth?: number}
-        const parts = [d.width, d.height, d.depth].filter(Boolean)
-        return parts.length ? parts.join(' × ') + ' mm' : null
-      })()
+  const dimensionStr = dimensions ? pickLang(dimensions.ko, dimensions.en, lang) : null
 
   const videoSrc = videoFile?.asset?.url ?? videoUrl ?? null;
+  const labelCol = lang === "ko" ? "3.5rem 1fr" : "6rem 1fr";
 
   return (
     <div className="flex flex-col gap-10">
@@ -68,7 +61,7 @@ export default function ArtworkDetailContent({
 
         <dl className="flex flex-col gap-2 text-sm">
           {(artist?.name?.ko || artist?.name?.en) && (
-            <div className="grid gap-3" style={{ gridTemplateColumns: lang === "ko" ? "3.5rem 1fr" : "6rem 1fr" }}>
+            <div className="grid gap-3" style={{ gridTemplateColumns: labelCol }}>
               <dt className="text-zinc-400">
                 {t(ui.artwork.artist, lang)}
               </dt>
@@ -78,7 +71,7 @@ export default function ArtworkDetailContent({
             </div>
           )}
           {year && (
-            <div className="grid gap-3" style={{ gridTemplateColumns: lang === "ko" ? "3.5rem 1fr" : "6rem 1fr" }}>
+            <div className="grid gap-3" style={{ gridTemplateColumns: labelCol }}>
               <dt className="text-zinc-400">
                 {t(ui.artwork.year, lang)}
               </dt>
@@ -86,7 +79,7 @@ export default function ArtworkDetailContent({
             </div>
           )}
           {(medium?.ko || medium?.en) && (
-            <div className="grid gap-3" style={{ gridTemplateColumns: lang === "ko" ? "3.5rem 1fr" : "6rem 1fr" }}>
+            <div className="grid gap-3" style={{ gridTemplateColumns: labelCol }}>
               <dt className="text-zinc-400">
                 {t(ui.artwork.medium, lang)}
               </dt>
@@ -96,7 +89,7 @@ export default function ArtworkDetailContent({
             </div>
           )}
           {dimensionStr && (
-            <div className="grid gap-3" style={{ gridTemplateColumns: lang === "ko" ? "3.5rem 1fr" : "6rem 1fr" }}>
+            <div className="grid gap-3" style={{ gridTemplateColumns: labelCol }}>
               <dt className="text-zinc-400">
                 {t(ui.artwork.dimensions, lang)}
               </dt>

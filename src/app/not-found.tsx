@@ -15,7 +15,7 @@ export default function NotFound() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-6 px-8">
       <p className="text-sm text-zinc-400">{message}</p>
-      <Link href="/works" className="text-sm text-zinc-900 underline underline-offset-4">
+      <Link href="/" className="text-sm text-zinc-900 underline underline-offset-4">
         {back}
       </Link>
     </main>

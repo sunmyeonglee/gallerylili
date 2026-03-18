@@ -37,3 +37,20 @@ body {
 .page-transition {
   animation: page-fade-in 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+/* 키보드 포커스 */
+:focus-visible {
+  outline: 2px solid #18181b;
+  outline-offset: 2px;
+}
+
+/* 모션 감소 선호 */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  .page-transition {
+    animation: none;
+  }
+}
