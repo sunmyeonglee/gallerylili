@@ -52,11 +52,17 @@ export default function AboutContent() {
   return (
     <main className="pt-32 pb-24 px-5 md:px-8 max-w-2xl mx-auto">
       <div className="flex flex-col gap-16">
-        {sections.map((section) => (
+        {sections.map((section, i) => (
           <section key={section.title}>
-            <h2 className="text-xs tracking-widest uppercase text-zinc-400 mb-5">
-              {section.title}
-            </h2>
+            {i === 0 ? (
+              <h1 className="text-xs tracking-widest uppercase text-zinc-400 mb-5">
+                {section.title}
+              </h1>
+            ) : (
+              <h2 className="text-xs tracking-widest uppercase text-zinc-400 mb-5">
+                {section.title}
+              </h2>
+            )}
             <p className="text-sm text-zinc-700 leading-8 whitespace-pre-line">
               {section.body}
             </p>

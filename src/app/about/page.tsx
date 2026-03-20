@@ -9,6 +9,7 @@ export const metadata: Metadata = {
     title: 'About — Gallery Lili',
     description: '갤러리 릴리 소개 — 키네틱 아트, 오토마타, 움직이는 조형 예술을 전문으로 하는 갤러리.',
     url: 'https://www.gallerylili.com/about',
+    images: [{ url: '/opengraph-image.png', width: 1200, height: 630 }],
   },
 }
 

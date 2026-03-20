@@ -40,9 +40,9 @@ export default function WorksGrid({ artworks }: Props) {
             )}
           </div>
           <div className="mt-3 space-y-0.5">
-            <p className="text-sm font-medium text-zinc-900">
+            <h2 className="text-sm font-medium text-zinc-900">
               {pickLang(artwork.title?.ko, artwork.title?.en, lang)}
-            </p>
+            </h2>
             <p className="text-sm text-zinc-400">{artwork.year}</p>
           </div>
         </Link>
