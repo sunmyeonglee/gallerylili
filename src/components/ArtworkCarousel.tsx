@@ -51,6 +51,8 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
     }
   }, [])
 
+  const touchStartX = useRef<number | null>(null)
+
   const goTo = useCallback((next: number) => {
     if (goToTimer.current) clearTimeout(goToTimer.current)
     setVisible(false)
@@ -107,6 +109,15 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
         <div
           className="relative w-full aspect-4/3 max-h-[60vh] overflow-hidden cursor-zoom-in"
           onClick={openLightbox}
+          onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX }}
+          onTouchEnd={(e) => {
+            if (touchStartX.current === null || images.length < 2) return
+            const dx = e.changedTouches[0].clientX - touchStartX.current
+            touchStartX.current = null
+            if (Math.abs(dx) < 40) return
+            if (dx < 0) goTo((index + 1) % images.length)
+            else goTo((index - 1 + images.length) % images.length)
+          }}
         >
           {/* 블러 배경 */}
           {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -213,6 +224,15 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
             cursor: 'default',
           }}
           onClick={(e) => { if (e.target === e.currentTarget) setLightbox(false) }}
+          onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX }}
+          onTouchEnd={(e) => {
+            if (touchStartX.current === null || images.length < 2) return
+            const dx = e.changedTouches[0].clientX - touchStartX.current
+            touchStartX.current = null
+            if (Math.abs(dx) < 40) return
+            if (dx < 0) lbGoTo((lbIndex + 1) % images.length)
+            else lbGoTo((lbIndex - 1 + images.length) % images.length)
+          }}
         >
           {/* 블러 플레이스홀더 */}
           <div
