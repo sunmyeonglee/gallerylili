@@ -12,6 +12,7 @@ type Artwork = {
   slug: string | null
   title: { ko?: string; en?: string } | null
   year: string | null
+  location: { ko?: string; en?: string } | null
   image: SanityImageSource | null
 }
 
@@ -44,6 +45,11 @@ export default function WorksGrid({ artworks }: Props) {
               {pickLang(artwork.title?.ko, artwork.title?.en, lang)}
             </h2>
             <p className="text-sm text-zinc-400">{artwork.year}</p>
+            {(artwork.location?.ko || artwork.location?.en) && (
+              <p className="text-xs text-zinc-400">
+                {pickLang(artwork.location?.ko, artwork.location?.en, lang)}
+              </p>
+            )}
           </div>
         </Link>
       ))}

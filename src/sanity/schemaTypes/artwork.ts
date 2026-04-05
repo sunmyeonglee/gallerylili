@@ -117,6 +117,14 @@ export const artwork = defineType({
       validation: (r) => r.required().min(1),
     }),
 
+    // ── Selected Installations 포함 여부 ──────────────────
+    defineField({
+      name: "featured",
+      title: "Selected Installations에 포함",
+      type: "boolean",
+      initialValue: false,
+    }),
+
     // ── 설치 장소 ─────────────────────────────────────────
     defineField({
       name: "location",

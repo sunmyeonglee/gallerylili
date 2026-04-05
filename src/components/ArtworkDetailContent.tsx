@@ -20,6 +20,7 @@ type Props = {
   year: string | null | undefined;
   medium: BilingualField;
   dimensions: { ko?: string; en?: string } | null | undefined;
+  location: BilingualField;
   description: BilingualField;
   images: ArtworkImage[];
   videoFile: { asset: { url: string } } | null | undefined;
@@ -32,6 +33,7 @@ export default function ArtworkDetailContent({
   year,
   medium,
   dimensions,
+  location,
   description,
   images,
   videoFile,
@@ -94,6 +96,16 @@ export default function ArtworkDetailContent({
                 {t(ui.artwork.dimensions, lang)}
               </dt>
               <dd className="text-zinc-700">{dimensionStr}</dd>
+            </div>
+          )}
+          {(location?.ko || location?.en) && (
+            <div className="grid gap-3" style={{ gridTemplateColumns: labelCol }}>
+              <dt className="text-zinc-400">
+                {lang === "ko" ? "위치" : "Location"}
+              </dt>
+              <dd className="text-zinc-700">
+                {pickLang(location?.ko, location?.en, lang)}
+              </dd>
             </div>
           )}
         </dl>

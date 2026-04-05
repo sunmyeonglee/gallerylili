@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
+import { draftMode } from "next/headers";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import Header from "@/components/Header";
+import DraftModeBanner from "@/components/DraftModeBanner";
 import Footer from "@/components/Footer";
 import PageTransition from "@/components/PageTransition";
 import NextTopLoader from "nextjs-toploader";
@@ -53,17 +55,22 @@ export const metadata: Metadata = {
   manifest: "/favicon/site.webmanifest",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const { isEnabled } = await draftMode();
+  const isDev = process.env.NODE_ENV === "development";
+  const secret = process.env.DRAFT_MODE_SECRET ?? "";
+
   return (
     <html lang="ko">
       <body
         className={`${inter.variable} font-sans antialiased`}
         suppressHydrationWarning
       >
+        {isDev && <DraftModeBanner isEnabled={isEnabled} secret={secret} />}
         <LanguageProvider>
           <NextTopLoader color="#18181b" height={2} showSpinner={false} />
           <Header />
