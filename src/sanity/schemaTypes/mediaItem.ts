@@ -2,7 +2,7 @@ import { defineField, defineType } from "sanity";
 
 export const pressArticle = defineType({
   name: "pressArticle",
-  title: "Press",
+  title: "보도자료",
   type: "document",
   fields: [
     defineField({
@@ -16,8 +16,11 @@ export const pressArticle = defineType({
     defineField({
       name: "title",
       title: "기사 제목",
-      type: "string",
-      validation: (r) => r.required(),
+      type: "object",
+      fields: [
+        defineField({ name: "ko", title: "한글", type: "string" }),
+        defineField({ name: "en", title: "English", type: "string" }),
+      ],
     }),
 
     defineField({
@@ -32,47 +35,37 @@ export const pressArticle = defineType({
       title: "발행일",
       type: "date",
     }),
-
-    defineField({
-      name: "logo",
-      title: "매체 로고",
-      type: "image",
-    }),
-
-    defineField({
-      name: "order",
-      title: "표시 순서",
-      type: "number",
-    }),
   ],
 
   orderings: [
     {
-      title: "표시 순서",
-      name: "orderAsc",
-      by: [{ field: "order", direction: "asc" }],
+      title: "발행일 최신순",
+      name: "dateDesc",
+      by: [{ field: "date", direction: "desc" }],
     },
   ],
 
   preview: {
     select: {
-      title: "title",
+      title: "title.ko",
       subtitle: "publication",
-      media: "logo",
     },
   },
 });
 
 export const videoItem = defineType({
   name: "videoItem",
-  title: "Videos",
+  title: "영상",
   type: "document",
   fields: [
     defineField({
       name: "title",
       title: "영상 제목",
-      type: "string",
-      validation: (r) => r.required(),
+      type: "object",
+      fields: [
+        defineField({ name: "ko", title: "한글", type: "string" }),
+        defineField({ name: "en", title: "English", type: "string" }),
+      ],
     }),
 
     defineField({
@@ -84,23 +77,23 @@ export const videoItem = defineType({
     }),
 
     defineField({
-      name: "order",
-      title: "표시 순서",
-      type: "number",
+      name: "date",
+      title: "발행일",
+      type: "date",
     }),
   ],
 
   orderings: [
     {
-      title: "표시 순서",
-      name: "orderAsc",
-      by: [{ field: "order", direction: "asc" }],
+      title: "발행일 최신순",
+      name: "dateDesc",
+      by: [{ field: "date", direction: "desc" }],
     },
   ],
 
   preview: {
     select: {
-      title: "title",
+      title: "title.ko",
       subtitle: "youtubeUrl",
     },
   },

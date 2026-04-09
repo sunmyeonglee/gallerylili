@@ -12,21 +12,21 @@ export const INSTALLATIONS_QUERY = defineQuery(`
 `)
 
 export const PRESS_QUERY = defineQuery(`
-  *[_type == "pressArticle"] | order(order asc) {
+  *[_type == "pressArticle"] | order(date desc) {
     _id,
     publication,
     title,
     url,
-    date,
-    "logo": logo.asset->url
+    date
   }
 `)
 
 export const VIDEOS_QUERY = defineQuery(`
-  *[_type == "videoItem"] | order(order asc) {
+  *[_type == "videoItem"] | order(date desc) {
     _id,
     title,
-    youtubeUrl
+    youtubeUrl,
+    date
   }
 `)
 
