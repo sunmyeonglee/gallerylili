@@ -146,6 +146,22 @@ export const artwork = defineType({
       ],
     }),
 
+    // ── 도슨트 ────────────────────────────────────────────
+    defineField({
+      name: "docentFile",
+      title: "도슨트 파일",
+      type: "file",
+      options: { accept: "video/*,audio/*" },
+      description: "mp4, mp3 등 파일 업로드",
+    }),
+
+    defineField({
+      name: "docentUrl",
+      title: "도슨트 URL",
+      type: "url",
+      description: "YouTube / 외부 링크 (파일이 없을 때 사용)",
+    }),
+
     // ── 영상 ──────────────────────────────────────────────
     defineField({
       name: "videoFile",

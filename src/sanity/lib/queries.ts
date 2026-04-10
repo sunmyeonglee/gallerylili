@@ -77,6 +77,8 @@ export const ARTWORK_DETAIL_QUERY = defineQuery(`
     images[]{ ..., asset-> },
     videoFile { asset-> },
     videoUrl,
+    docentFile { asset-> },
+    docentUrl,
     "artist": artist->{ name }
   }
 `)

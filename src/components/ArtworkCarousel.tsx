@@ -18,9 +18,10 @@ type Props = {
   alt: string
   videoSrc?: string | null
   isVideoFile?: boolean
+  docentSrc?: string | null
 }
 
-export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: Props) {
+export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile, docentSrc }: Props) {
   const goToTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const lbGoToTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -43,6 +44,10 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
   const [videoOpen, setVideoOpen] = useState(false)
   const [videoOverlay, setVideoOverlay] = useState(false)
   const [videoLoaded, setVideoLoaded] = useState(false)
+
+  // 도슨트
+  const [docentOpen, setDocentOpen] = useState(false)
+  const [docentOverlay, setDocentOverlay] = useState(false)
 
   useEffect(() => {
     return () => {
@@ -171,24 +176,44 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
             </>
           )}
 
-          {videoSrc && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation()
-                setVideoOverlay(false)
-                setVideoLoaded(false)
-                setVideoOpen(true)
-                requestAnimationFrame(() => requestAnimationFrame(() => setVideoOverlay(true)))
-              }}
-              className="absolute top-3 right-3 flex items-center gap-1.5 px-2.5 py-1.5 bg-white/80 hover:bg-white transition-colors text-zinc-800 text-xs cursor-pointer"
-              aria-label="영상 재생"
-            >
-              <svg width="10" height="12" viewBox="0 0 10 12" fill="currentColor">
-                <path d="M0 0L10 6L0 12V0Z"/>
-              </svg>
-              Video
-            </button>
-          )}
+          <div className="absolute top-3 right-3 flex items-center gap-2">
+            {videoSrc && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setVideoOverlay(false)
+                  setVideoLoaded(false)
+                  setVideoOpen(true)
+                  requestAnimationFrame(() => requestAnimationFrame(() => setVideoOverlay(true)))
+                }}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 bg-white/80 hover:bg-white transition-colors text-zinc-800 text-xs cursor-pointer"
+                aria-label="영상 재생"
+              >
+                <svg width="10" height="12" viewBox="0 0 10 12" fill="currentColor">
+                  <path d="M0 0L10 6L0 12V0Z"/>
+                </svg>
+                Video
+              </button>
+            )}
+            {docentSrc && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation()
+                  setDocentOverlay(false)
+                  setDocentOpen(true)
+                  requestAnimationFrame(() => requestAnimationFrame(() => setDocentOverlay(true)))
+                }}
+                className="flex items-center gap-1.5 px-2.5 py-1.5 bg-white/80 hover:bg-white transition-colors text-zinc-800 text-xs cursor-pointer"
+                aria-label="도슨트 재생"
+              >
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                  <path d="M6 0C4.34 0 3 1.34 3 3v4c0 1.66 1.34 3 3 3s3-1.34 3-3V3c0-1.66-1.34-3-3-3z"/>
+                  <path d="M1 6v1c0 2.76 2.24 5 5 5s5-2.24 5-5V6H9.5v1c0 1.93-1.57 3.5-3.5 3.5S2.5 8.93 2.5 7V6H1z"/>
+                </svg>
+                Docent
+              </button>
+            )}
+          </div>
         </div>
 
         {(current.caption || current.group) && (
@@ -337,6 +362,54 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile }: 
 
           <button
             onClick={() => setVideoOpen(false)}
+            style={{ position: 'absolute', top: 16, right: 16, color: 'rgba(255,255,255,0.7)', fontSize: 24, cursor: 'pointer', background: 'none', border: 'none' }}
+            aria-label="닫기"
+          >✕</button>
+        </div>,
+        document.body
+      )}
+
+      {docentOpen && docentSrc && createPortal(
+        <div
+          style={{
+            position: 'fixed', inset: 0, zIndex: 9999,
+            backgroundColor: 'rgba(0,0,0,0.9)',
+            opacity: docentOverlay ? 1 : 0,
+            transition: 'opacity 0.3s ease',
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            cursor: 'pointer',
+          }}
+          onClick={() => setDocentOpen(false)}
+        >
+          <div
+            style={{ width: '90vw', maxWidth: 640 }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {(() => {
+              const youtubeMatch = docentSrc.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/)
+              if (youtubeMatch) {
+                return (
+                  <iframe
+                    src={`https://www.youtube.com/embed/${youtubeMatch[1]}?autoplay=1`}
+                    style={{ width: '100%', aspectRatio: '16/9', border: 'none' }}
+                    allow="autoplay; encrypted-media"
+                    allowFullScreen
+                  />
+                )
+              }
+              return (
+                <video
+                  src={docentSrc}
+                  controls
+                  autoPlay
+                  playsInline
+                  style={{ width: '100%', display: 'block' }}
+                />
+              )
+            })()}
+          </div>
+          <button
+            onClick={() => setDocentOpen(false)}
             style={{ position: 'absolute', top: 16, right: 16, color: 'rgba(255,255,255,0.7)', fontSize: 24, cursor: 'pointer', background: 'none', border: 'none' }}
             aria-label="닫기"
           >✕</button>

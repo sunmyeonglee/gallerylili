@@ -88,6 +88,8 @@ export default async function ArtworkPage({ params }: Props) {
         images={artwork.images ?? []}
         videoFile={artwork.videoFile}
         videoUrl={artwork.videoUrl}
+        docentFile={artwork.docentFile}
+        docentUrl={artwork.docentUrl}
       />
     </main>
   );

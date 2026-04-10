@@ -25,6 +25,8 @@ type Props = {
   images: ArtworkImage[];
   videoFile: { asset: { url: string } } | null | undefined;
   videoUrl: string | null | undefined;
+  docentFile: { asset: { url: string } } | null | undefined;
+  docentUrl: string | null | undefined;
 };
 
 export default function ArtworkDetailContent({
@@ -38,6 +40,8 @@ export default function ArtworkDetailContent({
   images,
   videoFile,
   videoUrl,
+  docentFile,
+  docentUrl,
 }: Props) {
   const { lang } = useLanguage();
 
@@ -46,13 +50,14 @@ export default function ArtworkDetailContent({
   const dimensionStr = dimensions ? pickLang(dimensions.ko, dimensions.en, lang) : null
 
   const videoSrc = videoFile?.asset?.url ?? videoUrl ?? null;
+  const docentSrc = docentFile?.asset?.url ?? docentUrl ?? null;
   const labelCol = lang === "ko" ? "3.5rem 1fr" : "6rem 1fr";
 
   return (
     <div className="flex flex-col gap-10">
       {/* 캐러셀 */}
       {images?.length > 0 && (
-        <ArtworkCarousel images={images} alt={titleMain} videoSrc={videoSrc} isVideoFile={!!videoFile} />
+        <ArtworkCarousel images={images} alt={titleMain} videoSrc={videoSrc} isVideoFile={!!videoFile} docentSrc={docentSrc} />
       )}
 
       {/* 작품 정보 */}
