@@ -6,8 +6,8 @@ export default function Footer() {
   const pathname = usePathname();
   if (pathname?.startsWith("/studio")) return null;
   return (
-    <footer className="border-t border-zinc-100 py-8 px-5 md:px-8">
-      <div className="max-w-7xl mx-auto flex items-start justify-between">
+    <footer className="border-t border-zinc-100 py-8">
+      <div className="max-w-7xl mx-auto px-5 md:px-8 flex items-start justify-between">
       <p className="text-sm text-zinc-400 tracking-wide">Gallery Lili © 2026</p>
       <div className="flex flex-col items-end gap-1">
         <a
