@@ -340,7 +340,7 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile, do
             </div>
           )}
 
-          <div style={{ width: '90vw', maxWidth: 960, position: 'relative' }}>
+          <div style={{ maxWidth: '90vw', position: 'relative' }} onClick={(e) => e.stopPropagation()}>
             {isVideoFile ? (
               <video
                 src={videoSrc}
@@ -348,13 +348,16 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile, do
                 autoPlay
                 playsInline
                 onCanPlay={() => setVideoLoaded(true)}
-                onClick={(e) => e.stopPropagation()}
-                style={{ width: 'auto', maxWidth: '100%', maxHeight: '80vh', display: 'block', margin: '0 auto', opacity: videoLoaded ? 1 : 0, transition: 'opacity 0.6s ease' }}
+                style={{ maxWidth: '90vw', maxHeight: '80vh', display: 'block', opacity: videoLoaded ? 1 : 0, transition: 'opacity 0.6s ease' }}
               />
             ) : (
               <iframe
-                src={videoSrc}
-                style={{ width: '100%', aspectRatio: '16/9', border: 'none' }}
+                src={(() => {
+                  const m = videoSrc!.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/)
+                  return m ? `https://www.youtube.com/embed/${m[1]}?autoplay=1` : videoSrc!
+                })()}
+                style={{ width: '90vw', maxWidth: 960, aspectRatio: '16/9', border: 'none' }}
+                allow="autoplay; encrypted-media"
                 allowFullScreen
               />
             )}
