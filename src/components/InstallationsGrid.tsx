@@ -1,21 +1,25 @@
-'use client'
+"use client";
 
-import Link from 'next/link'
-import Image from 'next/image'
-import { useLanguage } from '@/contexts/LanguageContext'
-import { pickLang } from '@/lib/translations'
+import Link from "next/link";
+import Image from "next/image";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { pickLang } from "@/lib/translations";
 
 type Installation = {
-  _id: string
-  title: { ko?: string; en?: string } | null
-  year: string
-  location: { ko?: string; en?: string } | null
-  image: string | null
-  slug: string | null
-}
+  _id: string;
+  title: { ko?: string; en?: string } | null;
+  year: string;
+  location: { ko?: string; en?: string } | null;
+  image: string | null;
+  slug: string | null;
+};
 
-export default function InstallationsGrid({ installations }: { installations: Installation[] }) {
-  const { lang } = useLanguage()
+export default function InstallationsGrid({
+  installations,
+}: {
+  installations: Installation[];
+}) {
+  const { lang } = useLanguage();
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-10">
@@ -29,30 +33,33 @@ export default function InstallationsGrid({ installations }: { installations: In
                   alt={pickLang(item.title?.ko, item.title?.en, lang)}
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  className="object-cover transition-opacity duration-300 group-hover:opacity-80"
+                  className="object-cover grayscale transition-all duration-500 group-hover:grayscale-0"
                 />
               )}
             </div>
-            <p className="text-sm font-medium text-zinc-900">
-              {pickLang(item.title?.ko, item.title?.en, lang)}
-            </p>
             {(item.location?.ko || item.location?.en) && (
-              <p className="text-sm text-zinc-400 mt-0.5">
+              <p className="text-sm font-medium text-zinc-900">
                 {pickLang(item.location?.ko, item.location?.en, lang)}
               </p>
             )}
-            <p className="text-xs text-zinc-400">{item.year}</p>
+            <p className="text-sm text-zinc-400 mt-0.5">
+              {pickLang(item.title?.ko, item.title?.en, lang)}{item.year && ` (${item.year})`}
+            </p>
           </div>
-        )
+        );
 
         return item.slug ? (
-          <Link key={item._id} href={`/works/${item.slug}`} className="group block">
+          <Link
+            key={item._id}
+            href={`/works/${item.slug}`}
+            className="group block"
+          >
             {card}
           </Link>
         ) : (
           <div key={item._id}>{card}</div>
-        )
+        );
       })}
     </div>
-  )
+  );
 }

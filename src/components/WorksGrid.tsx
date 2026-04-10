@@ -35,7 +35,7 @@ export default function WorksGrid({ artworks }: Props) {
                 fill
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 priority={i < 3}
-                className="object-cover transition-opacity duration-300 group-hover:opacity-80"
+                className="object-cover grayscale transition-all duration-500 group-hover:grayscale-0"
                 onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
               />
             )}
@@ -44,10 +44,10 @@ export default function WorksGrid({ artworks }: Props) {
             <h2 className="text-sm font-medium text-zinc-900">
               {pickLang(artwork.title?.ko, artwork.title?.en, lang)}
             </h2>
-            <p className="text-sm text-zinc-400">{artwork.year}</p>
-            {(artwork.location?.ko || artwork.location?.en) && (
-              <p className="text-xs text-zinc-400">
+            {(artwork.location?.ko || artwork.location?.en || artwork.year) && (
+              <p className="text-sm text-zinc-400">
                 {pickLang(artwork.location?.ko, artwork.location?.en, lang)}
+                {artwork.year && ` (${artwork.year})`}
               </p>
             )}
           </div>

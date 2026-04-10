@@ -27,7 +27,7 @@ export default function Header() {
       }`}
     >
       {/* 상단 바 */}
-      <div className="flex items-center justify-between px-5 md:px-8 py-6">
+      <div className="flex items-center justify-between px-5 md:px-8 py-6 max-w-7xl mx-auto">
         <Link
           href="/"
           className="text-sm font-medium tracking-widest uppercase text-zinc-900"
@@ -121,7 +121,7 @@ export default function Header() {
 
       {/* 모바일 메뉴 */}
       {menuOpen && (
-        <nav className="md:hidden flex flex-col px-5 pb-8 gap-6">
+        <nav className="md:hidden flex flex-col px-5 pb-8 gap-6 max-w-7xl mx-auto">
           <Link
             href="/installations"
             className="text-sm tracking-wide text-zinc-900 hover:opacity-60 transition-opacity"
