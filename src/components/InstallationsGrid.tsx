@@ -33,7 +33,7 @@ export default function InstallationsGrid({
                   alt={pickLang(item.title?.ko, item.title?.en, lang)}
                   fill
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  className="object-cover grayscale transition-all duration-500 group-hover:grayscale-0"
+                  className="object-cover md:grayscale transition-all duration-500 md:group-hover:grayscale-0"
                 />
               )}
             </div>

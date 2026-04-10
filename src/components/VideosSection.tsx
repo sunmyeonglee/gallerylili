@@ -81,7 +81,7 @@ export default function VideosSection({ videos }: { videos: VideoItem[] }) {
                         src={`https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`}
                         alt={title}
                         fill
-                        className="object-cover grayscale transition-all duration-500 group-hover:grayscale-0"
+                        className="object-cover md:grayscale transition-all duration-500 md:group-hover:grayscale-0"
                       />
                       <div className="absolute inset-0 flex items-center justify-center group-hover:bg-black/10 transition-colors">
                         <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
@@ -98,7 +98,7 @@ export default function VideosSection({ videos }: { videos: VideoItem[] }) {
                         preload="metadata"
                         muted
                         playsInline
-                        className="absolute inset-0 w-full h-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0"
+                        className="absolute inset-0 w-full h-full object-cover md:grayscale transition-all duration-500 md:group-hover:grayscale-0"
                       />
                       <div className="absolute inset-0 flex items-center justify-center group-hover:bg-black/10 transition-colors">
                         <svg
