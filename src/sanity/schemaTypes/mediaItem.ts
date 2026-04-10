@@ -24,16 +24,43 @@ export const pressArticle = defineType({
     }),
 
     defineField({
+      name: "slug",
+      title: "Slug (상세 페이지용)",
+      type: "slug",
+      description: "상세 페이지가 필요한 경우에만 입력 (URL이 없는 저널, 사진+텍스트 자료 등)",
+      options: { source: "title.en", maxLength: 96 },
+    }),
+
+    defineField({
       name: "url",
       title: "기사 링크",
       type: "url",
-      validation: (r) => r.required(),
+      description: "외부 링크가 있는 경우 입력. slug와 url 중 하나만 사용.",
     }),
 
     defineField({
       name: "date",
       title: "발행일",
       type: "date",
+    }),
+
+    defineField({
+      name: "images",
+      title: "이미지",
+      type: "array",
+      of: [{ type: "image", options: { hotspot: true } }],
+      description: "상세 페이지용 이미지 (slug 사용 시)",
+    }),
+
+    defineField({
+      name: "body",
+      title: "본문",
+      type: "object",
+      description: "상세 페이지용 텍스트 (slug 사용 시)",
+      fields: [
+        defineField({ name: "ko", title: "한글", type: "text", rows: 10 }),
+        defineField({ name: "en", title: "English", type: "text", rows: 10 }),
+      ],
     }),
   ],
 

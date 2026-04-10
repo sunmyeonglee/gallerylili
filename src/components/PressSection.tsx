@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useLanguage } from '@/contexts/LanguageContext'
 import { pickLang } from '@/lib/translations'
 
@@ -7,8 +8,9 @@ type PressArticle = {
   _id: string
   publication: string
   title: { ko?: string; en?: string } | null
-  url: string
+  url: string | null
   date: string | null
+  slug: string | null
 }
 
 export default function PressSection({ articles }: { articles: PressArticle[] }) {
@@ -20,25 +22,53 @@ export default function PressSection({ articles }: { articles: PressArticle[] })
     <section>
       <h2 className="text-xs tracking-widest uppercase text-zinc-400 mb-8">Press</h2>
       <div className="flex flex-col divide-y divide-zinc-100">
-        {articles.map((article) => (
-          <a
-            key={article._id}
-            href={article.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-between py-4 group"
-          >
+        {articles.map((article) => {
+          const title = pickLang(article.title?.ko, article.title?.en, lang)
+          const meta = (
             <div>
               <p className="text-sm text-zinc-900 group-hover:opacity-60 transition-opacity">
-                {pickLang(article.title?.ko, article.title?.en, lang)}
+                {title}
               </p>
               <p className="text-xs text-zinc-400 mt-0.5">
                 {article.publication}{article.date && ` · ${article.date}`}
               </p>
             </div>
-            <span className="text-zinc-300 text-sm ml-4 shrink-0">↗</span>
-          </a>
-        ))}
+          )
+
+          if (article.slug) {
+            return (
+              <Link
+                key={article._id}
+                href={`/media/press/${article.slug}`}
+                className="flex items-center justify-between py-4 group"
+              >
+                {meta}
+                <span className="text-zinc-300 text-sm ml-4 shrink-0">→</span>
+              </Link>
+            )
+          }
+
+          if (article.url) {
+            return (
+              <a
+                key={article._id}
+                href={article.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center justify-between py-4 group"
+              >
+                {meta}
+                <span className="text-zinc-300 text-sm ml-4 shrink-0">↗</span>
+              </a>
+            )
+          }
+
+          return (
+            <div key={article._id} className="flex items-center justify-between py-4">
+              {meta}
+            </div>
+          )
+        })}
       </div>
     </section>
   )

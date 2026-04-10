@@ -17,7 +17,19 @@ export const PRESS_QUERY = defineQuery(`
     publication,
     title,
     url,
-    date
+    date,
+    "slug": slug.current
+  }
+`)
+
+export const PRESS_DETAIL_QUERY = defineQuery(`
+  *[_type == "pressArticle" && slug.current == $slug][0] {
+    _id,
+    publication,
+    title,
+    date,
+    "images": images[].asset->url,
+    body
   }
 `)
 
