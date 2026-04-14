@@ -20,8 +20,9 @@ export default function InstallationsList({ installations }: { installations: In
   return (
     <div className="flex flex-col divide-y divide-zinc-100">
       {installations.map((inst) => {
-        const name = pickLang(inst.location?.ko, inst.location?.en, lang);
-        if (!name) return null;
+        const title = pickLang(inst.title?.ko, inst.title?.en, lang);
+        const location = pickLang(inst.location?.ko, inst.location?.en, lang);
+        if (!title && !location) return null;
         return (
           <Link
             key={inst._id}
@@ -32,18 +33,22 @@ export default function InstallationsList({ installations }: { installations: In
               {inst.image && (
                 <Image
                   src={inst.image}
-                  alt={name}
+                  alt={title ?? ""}
                   fill
                   className="object-cover md:grayscale transition-all duration-500 md:group-hover:grayscale-0"
                 />
               )}
             </div>
             <div>
-              <p className="text-sm text-zinc-900 group-hover:opacity-60 transition-opacity">
-                {name}
-              </p>
-              {inst.year && (
-                <p className="text-xs text-zinc-400 mt-0.5">{inst.year}</p>
+              {location && (
+                <p className="text-sm text-zinc-900 group-hover:opacity-60 transition-opacity">
+                  {location}
+                </p>
+              )}
+              {title && (
+                <p className="text-xs text-zinc-400 mt-0.5">
+                  {title}{inst.year && ` (${inst.year})`}
+                </p>
               )}
             </div>
           </Link>
