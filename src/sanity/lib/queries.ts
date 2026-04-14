@@ -1,5 +1,11 @@
 import { defineQuery } from 'next-sanity'
 
+export const SITE_SETTINGS_QUERY = defineQuery(`
+  *[_type == "siteSettings"][0] {
+    "heroVideoUrl": heroVideo.asset->url
+  }
+`)
+
 export const INSTALLATIONS_QUERY = defineQuery(`
   *[_type == "artwork" && featured == true] | order(year desc) {
     _id,
@@ -62,6 +68,16 @@ export const ARTWORK_META_QUERY = defineQuery(`
     title,
     "description": description.ko,
     "image": images[0].asset->url
+  }
+`)
+
+export const CONCEPT_PROJECTS_QUERY = defineQuery(`
+  *[_type == "conceptProject"] | order(date desc) {
+    _id,
+    title,
+    concept,
+    date,
+    "images": images[].asset->url
   }
 `)
 
