@@ -6,11 +6,11 @@ export const siteSettings = defineType({
   type: "document",
   fields: [
     defineField({
-      name: "heroVideo",
-      title: "히어로 영상",
-      type: "file",
-      options: { accept: "video/*" },
-      description: "메인 페이지 배경 영상 (mp4 권장)",
+      name: "heroImage",
+      title: "히어로 이미지",
+      type: "image",
+      options: { hotspot: true },
+      description: "메인 페이지 배경 이미지",
     }),
   ],
   preview: {

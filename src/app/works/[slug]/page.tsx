@@ -72,7 +72,7 @@ export default async function ArtworkPage({ params }: Props) {
   };
 
   return (
-    <main className="pt-28 pb-24 px-5 md:px-8 max-w-7xl mx-auto">
+    <main className="pt-28 md:pt-40 pb-24 px-5 md:px-8 max-w-7xl mx-auto">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

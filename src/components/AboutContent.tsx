@@ -50,7 +50,7 @@ export default function AboutContent() {
   const { sections } = content[lang]
 
   return (
-    <main className="pt-32 pb-24 px-5 md:px-8 max-w-2xl mx-auto">
+    <main className="pt-32 md:pt-40 pb-24 px-5 md:px-8 max-w-2xl mx-auto">
       <div className="flex flex-col gap-16">
         {sections.map((section, i) => (
           <section key={section.title}>

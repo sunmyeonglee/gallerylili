@@ -15,50 +15,37 @@ export default function ConceptsGrid({ projects }: { projects: ConceptProject[] 
   const { lang } = useLanguage();
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-20">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-zinc-100">
       {projects.map((project) => {
         const title = pickLang(project.title?.ko, project.title?.en, lang);
         const concept = pickLang(project.concept?.ko, project.concept?.en, lang);
+        const image = project.images?.[0];
 
         return (
-          <div key={project._id}>
-            {/* 메인 이미지 */}
-            {project.images?.[0] && (
-              <div className="relative aspect-4/3 overflow-hidden bg-zinc-100">
-                <Image
-                  src={project.images[0]}
-                  alt={title}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                />
-              </div>
+          <div key={project._id} className="relative aspect-4/3 bg-zinc-200 overflow-hidden">
+            {/* 이미지 */}
+            {image && (
+              <Image
+                src={image}
+                alt={title ?? ""}
+                fill
+                className="object-cover"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
             )}
 
-            {/* 추가 이미지 (있을 경우 작게) */}
-            {project.images?.length > 1 && (
-              <div className="grid grid-cols-2 gap-1 mt-1">
-                {project.images.slice(1, 3).map((url, i) => (
-                  <div key={i} className="relative aspect-4/3 overflow-hidden bg-zinc-100">
-                    <Image
-                      src={url}
-                      alt={`${title} ${i + 2}`}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 50vw, 25vw"
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
+            {/* 하단 그라디언트 */}
+            <div className="absolute inset-x-0 bottom-0 h-2/5 bg-linear-to-t from-black/80 to-transparent" />
 
-            {/* 텍스트 */}
-            <div className="mt-4 space-y-1.5">
+            {/* 텍스트 — 좌측 하단 */}
+            <div className="absolute bottom-0 left-0 p-5 z-10">
               {title && (
-                <p className="text-sm font-medium text-zinc-900">{title}</p>
+                <p className="text-xs tracking-widest uppercase text-white/60 mb-1">
+                  {title}
+                </p>
               )}
               {concept && (
-                <p className="text-sm text-zinc-500 leading-relaxed break-keep">
+                <p className="text-sm text-white leading-relaxed break-keep max-w-xs">
                   {concept}
                 </p>
               )}

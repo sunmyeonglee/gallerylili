@@ -18,7 +18,7 @@ export default function PressDetailContent({ article }: { article: Article }) {
   const { lang } = useLanguage()
 
   return (
-    <main className="pt-32 pb-24 px-5 md:px-8 max-w-7xl mx-auto">
+    <main className="pt-32 md:pt-40 pb-24 px-5 md:px-8 max-w-7xl mx-auto">
       <Link
         href="/media"
         className="text-xs tracking-widest uppercase text-zinc-400 hover:text-zinc-900 transition-colors"

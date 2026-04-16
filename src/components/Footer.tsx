@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 
 export default function Footer() {
   const pathname = usePathname();
-  if (pathname?.startsWith("/studio")) return null;
+  if (pathname?.startsWith("/studio") || pathname === "/") return null;
   return (
     <footer className="border-t border-zinc-100 py-8">
       <div className="max-w-7xl mx-auto px-5 md:px-8 flex items-start justify-between">
