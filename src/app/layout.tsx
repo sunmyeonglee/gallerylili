@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Gothic_A1 } from "next/font/google";
+import localFont from "next/font/local";
 import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 import { draftMode, cookies } from "next/headers";
 import { LanguageProvider } from "@/contexts/LanguageContext";
@@ -10,10 +11,20 @@ import PageTransition from "@/components/PageTransition";
 import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
 
-const inter = Inter({
-  subsets: ["latin"],
+const gothicA1 = Gothic_A1({
   weight: ["300", "400", "500"],
-  variable: "--font-sans",
+  variable: "--font-ko",
+  preload: false,
+});
+
+const standard = localFont({
+  src: [
+    { path: "../../public/font/standard-book-webfont.woff2", weight: "400", style: "normal" },
+    { path: "../../public/font/standard-book-italic-webfont.woff2", weight: "400", style: "italic" },
+    { path: "../../public/font/standard-bold-webfont.woff2", weight: "700", style: "normal" },
+    { path: "../../public/font/standard-bold-italic-webfont.woff2", weight: "700", style: "italic" },
+  ],
+  variable: "--font-en",
 });
 
 const siteUrl = "https://www.gallerylili.com";
@@ -70,7 +81,7 @@ export default async function RootLayout({
   return (
     <html lang="ko">
       <body
-        className={`${inter.variable} font-sans antialiased`}
+        className={`${gothicA1.variable} ${standard.variable} font-sans antialiased`}
         suppressHydrationWarning
       >
         {isDev && <DraftModeBanner isEnabled={isEnabled} secret={secret} />}

@@ -43,7 +43,7 @@ export default function PressSection({ articles }: { articles: PressArticle[] })
                 className="flex items-center justify-between py-4 group"
               >
                 {meta}
-                <svg className="text-zinc-300 ml-4 shrink-0" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <svg className="text-zinc-300 group-hover:text-zinc-900 transition-colors ml-4 shrink-0" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M2 7H12M12 7L7 2M12 7L7 12" />
                 </svg>
               </Link>
@@ -60,7 +60,7 @@ export default function PressSection({ articles }: { articles: PressArticle[] })
                 className="flex items-center justify-between py-4 group"
               >
                 {meta}
-                <svg className="text-zinc-300 ml-4 shrink-0" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                <svg className="text-zinc-300 group-hover:text-zinc-900 transition-colors ml-4 shrink-0" width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M3 11L11 3M11 3H5M11 3V9" />
                 </svg>
               </a>

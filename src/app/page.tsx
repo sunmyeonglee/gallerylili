@@ -49,7 +49,7 @@ export default async function HomePage() {
         )}
         <div className="absolute inset-0 bg-black/50" />
 
-        <div className="relative z-10 w-full pb-10 px-5 md:px-0 flex justify-start md:justify-center">
+        <div className="relative z-10 w-full pb-12 px-5 md:px-8 flex justify-start md:justify-end max-w-7xl mx-auto">
           <HeroCopy />
         </div>
       </section>

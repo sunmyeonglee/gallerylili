@@ -11,41 +11,48 @@ type ConceptProject = {
   images: string[];
 };
 
-export default function ConceptsGrid({ projects }: { projects: ConceptProject[] }) {
+export default function ConceptsGrid({
+  projects,
+}: {
+  projects: ConceptProject[];
+}) {
   const { lang } = useLanguage();
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-zinc-100">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
       {projects.map((project) => {
         const title = pickLang(project.title?.ko, project.title?.en, lang);
-        const concept = pickLang(project.concept?.ko, project.concept?.en, lang);
+        const concept = pickLang(
+          project.concept?.ko,
+          project.concept?.en,
+          lang,
+        );
         const image = project.images?.[0];
 
         return (
-          <div key={project._id} className="relative aspect-4/3 bg-zinc-200 overflow-hidden">
+          <div key={project._id}>
             {/* 이미지 */}
-            {image && (
-              <Image
-                src={image}
-                alt={title ?? ""}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
-            )}
+            <div className="relative aspect-4/3 bg-zinc-100 overflow-hidden mb-4">
+              {image && (
+                <Image
+                  src={image}
+                  alt={title ?? ""}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 33vw"
+                />
+              )}
+            </div>
 
-            {/* 하단 그라디언트 */}
-            <div className="absolute inset-x-0 bottom-0 h-2/5 bg-linear-to-t from-black/80 to-transparent" />
-
-            {/* 텍스트 — 좌측 하단 */}
-            <div className="absolute bottom-0 left-0 p-5 z-10">
+            {/* 텍스트 */}
+            <div className="space-y-1.5">
               {title && (
-                <p className="text-xs tracking-widest uppercase text-white/60 mb-1">
+                <p className="text-xs tracking-widest uppercase text-zinc-400">
                   {title}
                 </p>
               )}
               {concept && (
-                <p className="text-sm text-white leading-relaxed break-keep max-w-xs">
+                <p className="text-sm text-zinc-600 leading-relaxed break-keep">
                   {concept}
                 </p>
               )}

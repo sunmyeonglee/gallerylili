@@ -7,7 +7,6 @@ import { useLanguage } from "@/contexts/LanguageContext";
 
 const navLinks = [
   { href: "/works", label: "Works" },
-  { href: "/installations", label: "Installations" },
   { href: "/concepts", label: "Concepts" },
   { href: "/media", label: "Media" },
   { href: "/about", label: "About" },
@@ -17,7 +16,7 @@ export default function Header() {
   const pathname = usePathname();
   const { lang, setLang } = useLanguage();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [scrolled, setScrolled] = useState(false); // bg 전환용
 
   if (pathname?.startsWith("/studio")) return null;
 
@@ -69,60 +68,29 @@ export default function Header() {
       }`}
     >
       {/* ── 데스크탑 ── */}
-      <div className="hidden md:block px-5 md:px-8 max-w-7xl mx-auto">
-        {/* 1행: 로고 중앙 — 스크롤 시 접힘 */}
-        <div
-          className={`flex justify-center overflow-hidden transition-all duration-500 ease-in-out ${
-            scrolled
-              ? "max-h-0 opacity-0 pt-0 pb-0"
-              : "max-h-24 opacity-100 pt-6 pb-5"
-          }`}
+      <div className="hidden md:flex items-center px-8 py-5 max-w-7xl mx-auto relative">
+        <Link
+          href="/"
+          className={`text-xl font-bold tracking-widest uppercase transition-colors duration-300 ${textColor}`}
+          onClick={() => setMenuOpen(false)}
         >
-          <Link
-            href="/"
-            className={`text-2xl font-medium tracking-widest uppercase transition-colors duration-300 ${textColor}`}
-            onClick={() => setMenuOpen(false)}
-          >
-            Gallery Lili
-          </Link>
-        </div>
+          Gallery Lili
+        </Link>
 
-        {/* 2행: 로고(스크롤 후 좌측) + nav 중앙 + 언어 우측 */}
-        <div
-          className={`relative flex justify-center items-center transition-all duration-500 ease-in-out ${
-            scrolled ? "py-5" : "pb-5"
-          }`}
-        >
-          {/* 스크롤 후 좌측에 나타나는 로고 */}
-          <div
-            className={`absolute left-0 transition-opacity duration-500 ${
-              scrolled ? "opacity-100" : "opacity-0 pointer-events-none"
-            }`}
-          >
+        <nav className="absolute left-1/2 -translate-x-1/2 flex items-center gap-8">
+          {navLinks.map(({ href, label }) => (
             <Link
-              href="/"
-              className={`text-xl font-medium tracking-widest uppercase transition-colors duration-300 ${textColor}`}
-              onClick={() => setMenuOpen(false)}
+              key={href}
+              href={href}
+              className={`text-sm tracking-wide uppercase hover:opacity-60 transition-opacity duration-300 ${textColor}`}
             >
-              Gallery Lili
+              {label}
             </Link>
-          </div>
+          ))}
+        </nav>
 
-          <nav className="flex items-center gap-8">
-            {navLinks.map(({ href, label }) => (
-              <Link
-                key={href}
-                href={href}
-                className={`text-sm tracking-wide uppercase hover:opacity-60 transition-opacity duration-300 ${textColor}`}
-              >
-                {label}
-              </Link>
-            ))}
-          </nav>
-
-          <div className="absolute right-0">
-            <LangToggle />
-          </div>
+        <div className="ml-auto">
+          <LangToggle />
         </div>
       </div>
 
@@ -130,7 +98,7 @@ export default function Header() {
       <div className="md:hidden flex items-center justify-between px-5 py-6">
         <Link
           href="/"
-          className={`text-base font-medium tracking-widest uppercase transition-colors duration-300 ${textColor}`}
+          className={`text-base font-bold tracking-widest uppercase transition-colors duration-300 ${textColor}`}
           onClick={() => setMenuOpen(false)}
         >
           Gallery Lili

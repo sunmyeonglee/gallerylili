@@ -23,7 +23,8 @@ export default function PressDetailContent({ article }: { article: Article }) {
         href="/media"
         className="text-xs tracking-widest uppercase text-zinc-400 hover:text-zinc-900 transition-colors"
       >
-        ← Media
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" className="inline-block mr-1 align-middle"><path d="M10 3L5 8L10 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        <span className="align-middle">Media</span>
       </Link>
 
       <div className="mt-12 max-w-3xl">

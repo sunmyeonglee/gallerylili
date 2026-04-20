@@ -13,10 +13,10 @@ export default function PageHeader({ title, ko, en }: Props) {
 
   return (
     <div className="mb-16">
-      <h1 className="text-xs tracking-widest uppercase text-zinc-400 mb-4">
+      <h1 className="text-xs tracking-wider uppercase text-zinc-400 mb-4">
         {title}
       </h1>
-      <p className="text-sm text-zinc-500 max-w-md leading-8 break-keep">
+      <p className="text-sm text-zinc-500 max-w-md leading-relaxed break-keep">
         {lang === "ko" ? ko : en}
       </p>
     </div>
