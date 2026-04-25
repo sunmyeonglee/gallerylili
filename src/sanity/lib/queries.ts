@@ -2,7 +2,12 @@ import { defineQuery } from 'next-sanity'
 
 export const SITE_SETTINGS_QUERY = defineQuery(`
   *[_type == "siteSettings"][0] {
-    "heroImageUrl": heroImage.asset->url
+    "heroImageUrl": heroImage.asset->url,
+    "landingImages": [
+      landingImageWorks.asset->url,
+      landingImageMedia.asset->url,
+      landingImageAbout.asset->url
+    ]
   }
 `)
 
@@ -78,6 +83,12 @@ export const CONCEPT_PROJECTS_QUERY = defineQuery(`
     concept,
     date,
     "images": images[].asset->url
+  }
+`)
+
+export const LANDING_IMAGES_QUERY = defineQuery(`
+  *[_type == "artwork"] | order(year desc)[0...3] {
+    "image": images[0].asset->url
   }
 `)
 

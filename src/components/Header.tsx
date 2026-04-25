@@ -19,13 +19,6 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false); // bg 전환용
 
-  if (pathname?.startsWith("/studio")) return null;
-
-  const isHome = pathname === "/";
-  const transparent = isHome && !scrolled && !menuOpen;
-  const textColor = transparent ? "text-white" : "text-zinc-900";
-  const strokeColor = transparent ? "rgba(255,255,255,0.9)" : "#18181b";
-
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth >= 768) setMenuOpen(false);
@@ -39,6 +32,13 @@ export default function Header() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  if (pathname?.startsWith("/studio") || pathname === "/") return null;
+
+  const isHome = pathname === "/";
+  const transparent = isHome && !scrolled && !menuOpen;
+  const textColor = transparent ? "text-white" : "text-zinc-900";
+  const strokeColor = transparent ? "rgba(255,255,255,0.9)" : "#18181b";
 
   const LangToggle = ({ className = "" }: { className?: string }) => (
     <div
@@ -71,7 +71,7 @@ export default function Header() {
       {/* ── 데스크탑 ── */}
       <div className="hidden md:flex items-center px-8 py-5 max-w-7xl mx-auto relative">
         <Link
-          href="/"
+          href="/works"
           className={`text-base font-medium tracking-[0.25em] uppercase transition-colors duration-300 ${textColor}`}
           onClick={() => setMenuOpen(false)}
         >
@@ -98,7 +98,7 @@ export default function Header() {
       {/* ── 모바일 공통 ── */}
       <div className="md:hidden flex items-center justify-between px-5 py-6">
         <Link
-          href="/"
+          href="/works"
           className={`text-base font-medium tracking-[0.25em] uppercase transition-colors duration-300 ${textColor}`}
           onClick={() => setMenuOpen(false)}
         >

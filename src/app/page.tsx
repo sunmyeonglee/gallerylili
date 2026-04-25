@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { draftMode } from "next/headers";
 import { client, draftClient } from "@/sanity/lib/client";
 import { SITE_SETTINGS_QUERY } from "@/sanity/lib/queries";
-import HeroCopy from "@/components/HeroCopy";
+import LandingHero from "@/components/LandingHero";
 
 export const revalidate = 60;
 
@@ -26,8 +25,16 @@ const jsonLd = {
 
 export default async function HomePage() {
   const { isEnabled } = await draftMode();
-  const settings = await (isEnabled ? draftClient : client).fetch(SITE_SETTINGS_QUERY);
-  const heroImageUrl: string | null = settings?.heroImageUrl ?? null;
+  const settings = await (isEnabled ? draftClient : client).fetch(
+    SITE_SETTINGS_QUERY,
+  );
+
+  const fallbackImage: string | null = settings?.heroImageUrl ?? null;
+  const images: (string | null)[] = settings?.landingImages ?? [
+    null,
+    null,
+    null,
+  ];
 
   return (
     <main>
@@ -35,24 +42,7 @@ export default async function HomePage() {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-
-      <section className="relative h-svh flex flex-col justify-end overflow-hidden">
-        {heroImageUrl && (
-          <Image
-            src={heroImageUrl}
-            alt="Gallery Lili"
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover grayscale"
-          />
-        )}
-        <div className="absolute inset-0 bg-black/50" />
-
-        <div className="relative z-10 w-full pb-12 px-5 md:px-8 flex justify-start md:justify-end max-w-7xl mx-auto">
-          <HeroCopy />
-        </div>
-      </section>
+      <LandingHero images={images} fallbackImage={fallbackImage} />
     </main>
   );
 }
