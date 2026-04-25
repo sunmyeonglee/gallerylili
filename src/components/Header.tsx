@@ -9,6 +9,7 @@ const navLinks = [
   { href: "/works", label: "Works" },
   { href: "/concepts", label: "Concepts" },
   { href: "/media", label: "Media" },
+  { href: "/services", label: "System" },
   { href: "/about", label: "About" },
 ];
 
@@ -71,7 +72,7 @@ export default function Header() {
       <div className="hidden md:flex items-center px-8 py-5 max-w-7xl mx-auto relative">
         <Link
           href="/"
-          className={`text-xl font-bold tracking-widest uppercase transition-colors duration-300 ${textColor}`}
+          className={`text-base font-medium tracking-[0.25em] uppercase transition-colors duration-300 ${textColor}`}
           onClick={() => setMenuOpen(false)}
         >
           Gallery Lili
@@ -98,7 +99,7 @@ export default function Header() {
       <div className="md:hidden flex items-center justify-between px-5 py-6">
         <Link
           href="/"
-          className={`text-base font-bold tracking-widest uppercase transition-colors duration-300 ${textColor}`}
+          className={`text-base font-medium tracking-[0.25em] uppercase transition-colors duration-300 ${textColor}`}
           onClick={() => setMenuOpen(false)}
         >
           Gallery Lili
