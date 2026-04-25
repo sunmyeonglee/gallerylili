@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { DM_Sans } from "next/font/google";
 import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 import { draftMode, cookies } from "next/headers";
 import { LanguageProvider } from "@/contexts/LanguageContext";
@@ -10,7 +10,7 @@ import PageTransition from "@/components/PageTransition";
 import NextTopLoader from "nextjs-toploader";
 import "./globals.css";
 
-const inter = Inter({
+const dmSans = DM_Sans({
   subsets: ["latin"],
   weight: ["300", "400", "500"],
   variable: "--font-sans",
@@ -70,7 +70,7 @@ export default async function RootLayout({
   return (
     <html lang="ko">
       <body
-        className={`${inter.variable} font-sans antialiased`}
+        className={`${dmSans.variable} font-sans antialiased`}
         suppressHydrationWarning
       >
         {isDev && <DraftModeBanner isEnabled={isEnabled} secret={secret} />}
