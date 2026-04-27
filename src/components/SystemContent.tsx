@@ -204,21 +204,21 @@ export default function SystemContent() {
   const plans = [
     {
       name: "Basic",
-      visit: isKo ? "연 1회 방문 점검" : "1 site visit per year",
+      visit: isKo ? "연 2회 방문 점검" : "2 site visits per year",
       support: isKo ? "원격 기술 지원" : "Basic technical support",
-      rate: "5 – 7%",
+      rate: "~10%",
     },
     {
       name: "Standard",
-      visit: isKo ? "연 2회 방문 점검" : "2 site visits per year",
+      visit: isKo ? "연 4회 방문 점검" : "4 site visits per year",
       support: isKo ? "소모품 교체 포함" : "Parts replacement included",
-      rate: "8 – 10%",
+      rate: "~20%",
     },
     {
       name: "Premium",
-      visit: isKo ? "연 4회 방문 점검" : "4 site visits per year",
-      support: isKo ? "긴급 대응 포함" : "Priority support",
-      rate: "10 – 15%",
+      visit: isKo ? "연 12회 방문 점검" : "12 site visits per year",
+      support: isKo ? "긴급 대응 포함" : "Priority & emergency support",
+      rate: "~30%",
     },
   ];
 
@@ -240,47 +240,6 @@ export default function SystemContent() {
         "Remote monitoring & support",
       ];
 
-  const pricingRows = isKo
-    ? [
-        {
-          size: "소형 (가로 1m 이하)",
-          complexity: "★",
-          y2: "30 ~ 50만원",
-          y3: "76.5 ~ 127.5만원",
-        },
-        {
-          size: "중형 (가로 1 ~ 3m)",
-          complexity: "★★",
-          y2: "126 ~ 160만원",
-          y3: "178.5 ~ 255만원",
-        },
-        {
-          size: "대형 (가로 3m 이상)",
-          complexity: "★★★",
-          y2: "270 ~ 360만원+",
-          y3: "382.5 ~ 510만원+",
-        },
-      ]
-    : [
-        {
-          size: "Small (W ≤ 1m)",
-          complexity: "★",
-          y2: "$540 – $765",
-          y3: "$765 – $918",
-        },
-        {
-          size: "Medium (W 1–3m)",
-          complexity: "★★",
-          y2: "$900 – $1,275",
-          y3: "$1,275 – $1,530",
-        },
-        {
-          size: "Large (W 3–6m)",
-          complexity: "★★★",
-          y2: "$1,800 – $2,550",
-          y3: "$2,550 – $3,660",
-        },
-      ];
 
   return (
     <div className="space-y-20 md:space-y-28">
@@ -565,72 +524,27 @@ export default function SystemContent() {
           ))}
         </div>
 
-        {/* 서비스 항목 + 비용 가이드 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-          <div>
-            <p className="text-xs tracking-widest uppercase text-zinc-400 mb-6">
-              {isKo ? "서비스 포함 항목" : "Service Includes"}
-            </p>
-            <ul className="space-y-3">
-              {serviceIncludes.map((item) => (
-                <li
-                  key={item}
-                  className="flex items-start gap-3 text-sm text-zinc-600"
-                >
-                  <span className="mt-2 w-1 h-1 rounded-full bg-zinc-400 shrink-0" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <p className="text-xs tracking-widest uppercase text-zinc-400 mb-6">
-              {isKo ? "비용 가이드 (예시)" : "Cost Guide (Example)"}
-            </p>
-            <div className="overflow-x-auto">
-              <table className="w-full text-xs">
-                <thead>
-                  <tr className="border-b border-zinc-200">
-                    <th className="text-left font-normal text-zinc-400 pb-3 pr-4">
-                      {isKo ? "작품 크기" : "Size"}
-                    </th>
-                    <th className="text-left font-normal text-zinc-400 pb-3 pr-4">
-                      {isKo ? "난이도" : "Complexity"}
-                    </th>
-                    <th className="text-right font-normal text-zinc-400 pb-3 pr-4">
-                      {isKo ? "2년 (10%↓)" : "2Y (10% off)"}
-                    </th>
-                    <th className="text-right font-normal text-zinc-400 pb-3">
-                      {isKo ? "3년 (15%↓)" : "3Y (15% off)"}
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {pricingRows.map((row) => (
-                    <tr key={row.size} className="border-b border-zinc-50">
-                      <td className="text-zinc-600 py-3 pr-4 whitespace-nowrap">
-                        {row.size}
-                      </td>
-                      <td className="text-zinc-400 py-3 pr-4">
-                        {row.complexity}
-                      </td>
-                      <td className="text-right text-zinc-600 py-3 pr-4 whitespace-nowrap">
-                        {row.y2}
-                      </td>
-                      <td className="text-right text-zinc-600 py-3 whitespace-nowrap">
-                        {row.y3}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <p className="text-xs text-zinc-400 mt-4 leading-relaxed break-keep">
-              {isKo
-                ? "※ 상기 비용은 예시이며, 작품의 복잡도, 설치 환경에 따라 달라질 수 있습니다."
-                : "※ Costs vary depending on size, complexity and installation environment."}
-            </p>
-          </div>
+        {/* 서비스 포함 항목 */}
+        <div>
+          <p className="text-xs tracking-widest uppercase text-zinc-400 mb-6">
+            {isKo ? "서비스 포함 항목" : "Service Includes"}
+          </p>
+          <ul className="space-y-3 mb-10">
+            {serviceIncludes.map((item) => (
+              <li
+                key={item}
+                className="flex items-start gap-3 text-sm text-zinc-600"
+              >
+                <span className="mt-2 w-1 h-1 rounded-full bg-zinc-400 shrink-0" />
+                {item}
+              </li>
+            ))}
+          </ul>
+          <p className="text-sm text-zinc-500 leading-relaxed break-keep">
+            {isKo
+              ? "각 프로젝트의 비용은 설치 환경, 작품의 난이도, 규모에 따라 협의됩니다."
+              : "Project budgets are determined based on installation conditions, complexity, and scale."}
+          </p>
         </div>
       </section>
 
