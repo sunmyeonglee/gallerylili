@@ -10,7 +10,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   return [
     { url: base, lastModified: new Date(), changeFrequency: 'weekly', priority: 1 },
-    { url: `${base}/installations`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
+    { url: `${base}/works`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.9 },
+    { url: `${base}/concepts`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${base}/services`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
     { url: `${base}/media`, lastModified: new Date(), changeFrequency: 'weekly', priority: 0.8 },
     { url: `${base}/about`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
     ...artworks.map((a: { slug: string; _updatedAt: string }) => ({

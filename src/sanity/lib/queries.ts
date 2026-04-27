@@ -86,11 +86,6 @@ export const CONCEPT_PROJECTS_QUERY = defineQuery(`
   }
 `)
 
-export const LANDING_IMAGES_QUERY = defineQuery(`
-  *[_type == "artwork"] | order(year desc)[0...3] {
-    "image": images[0].asset->url
-  }
-`)
 
 export const ARTWORK_DETAIL_QUERY = defineQuery(`
   *[_type == "artwork" && slug.current == $slug][0] {

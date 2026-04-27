@@ -240,7 +240,6 @@ export default function SystemContent() {
         "Remote monitoring & support",
       ];
 
-
   return (
     <div className="space-y-20 md:space-y-28">
       {/* ── 탭 섹션 ── */}
@@ -251,7 +250,7 @@ export default function SystemContent() {
             <button
               key={t}
               onClick={() => setTab(t)}
-              className={`pb-4 text-base tracking-widest uppercase transition-colors -mb-px ${
+              className={`pb-4 text-base tracking-widest uppercase transition-colors -mb-px cursor-pointer ${
                 tab === t
                   ? "border-b-2 border-zinc-900 text-zinc-900 font-medium"
                   : "text-zinc-400 hover:text-zinc-600"
