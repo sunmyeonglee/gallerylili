@@ -23,7 +23,7 @@ export default async function MediaPage() {
   ])
 
   return (
-    <main className="pt-32 md:pt-40 pb-24 px-5 md:px-8 max-w-7xl mx-auto">
+    <main className="pt-28 md:pt-32 pb-24 px-5 md:px-8 max-w-7xl mx-auto">
       <div className="flex flex-col gap-20">
         <VideosSection videos={videos} />
         <PressSection articles={press} />
