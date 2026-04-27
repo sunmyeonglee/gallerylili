@@ -104,6 +104,27 @@ export default function AboutContent() {
             </p>
           </section>
         ))}
+
+        {/* Contact */}
+        <section>
+          <h2 className="text-xs tracking-widest uppercase text-zinc-400 mb-5">
+            {lang === 'ko' ? '문의' : 'Contact'}
+          </h2>
+          <div className="flex flex-col gap-2">
+            <a
+              href="mailto:lili@gallerylili.com"
+              className="text-sm text-zinc-700 hover:text-zinc-900 transition-colors"
+            >
+              lili@gallerylili.com
+            </a>
+            <a
+              href="tel:+821052786053"
+              className="text-sm text-zinc-700 hover:text-zinc-900 transition-colors"
+            >
+              +82-10-5278-6053
+            </a>
+          </div>
+        </section>
       </div>
     </main>
   )
