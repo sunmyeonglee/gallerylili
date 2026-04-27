@@ -25,7 +25,7 @@ export const INSTALLATIONS_QUERY = defineQuery(`
 export const PRESS_QUERY = defineQuery(`
   *[_type == "pressArticle"] | order(date desc) {
     _id,
-    publication,
+    "publication": { "ko": publication.ko, "en": publication.en },
     title,
     url,
     date,
@@ -36,7 +36,7 @@ export const PRESS_QUERY = defineQuery(`
 export const PRESS_DETAIL_QUERY = defineQuery(`
   *[_type == "pressArticle" && slug.current == $slug][0] {
     _id,
-    publication,
+    "publication": { "ko": publication.ko, "en": publication.en },
     title,
     date,
     "images": images[].asset->url,

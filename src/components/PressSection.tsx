@@ -6,7 +6,7 @@ import { pickLang } from '@/lib/translations'
 
 type PressArticle = {
   _id: string
-  publication: string
+  publication: { ko?: string; en?: string } | null
   title: { ko?: string; en?: string } | null
   url: string | null
   date: string | null
@@ -24,13 +24,14 @@ export default function PressSection({ articles }: { articles: PressArticle[] })
       <div className="flex flex-col divide-y divide-zinc-100">
         {articles.map((article) => {
           const title = pickLang(article.title?.ko, article.title?.en, lang)
+          const publication = pickLang(article.publication?.ko, article.publication?.en, lang)
           const meta = (
             <div>
               <p className="text-sm text-zinc-900 group-hover:opacity-60 transition-opacity">
                 {title}
               </p>
               <p className="text-xs text-zinc-400 mt-0.5">
-                {article.publication}{article.date && ` · ${article.date}`}
+                {publication}{article.date && ` · ${article.date}`}
               </p>
             </div>
           )

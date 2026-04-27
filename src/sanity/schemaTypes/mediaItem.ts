@@ -8,9 +8,12 @@ export const pressArticle = defineType({
     defineField({
       name: "publication",
       title: "매체명",
-      type: "string",
-      description: "예: 조선일보, Dezeen",
-      validation: (r) => r.required(),
+      type: "object",
+      fields: [
+        defineField({ name: "ko", title: "한글", type: "string" }),
+        defineField({ name: "en", title: "English", type: "string" }),
+      ],
+      description: "예: 조선일보 / The Korea Herald",
     }),
 
     defineField({
@@ -75,7 +78,7 @@ export const pressArticle = defineType({
   preview: {
     select: {
       title: "title.ko",
-      subtitle: "publication",
+      subtitle: "publication.ko",
     },
   },
 });

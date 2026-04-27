@@ -7,7 +7,7 @@ import { pickLang } from '@/lib/translations'
 
 type Article = {
   _id: string
-  publication: string
+  publication: { ko?: string; en?: string } | null
   title: { ko?: string; en?: string } | null
   date: string | null
   images: string[] | null
@@ -29,7 +29,7 @@ export default function PressDetailContent({ article }: { article: Article }) {
 
       <div className="mt-12 max-w-3xl">
         <p className="text-xs text-zinc-400 mb-2">
-          {article.publication}{article.date && ` · ${article.date}`}
+          {pickLang(article.publication?.ko, article.publication?.en, lang)}{article.date && ` · ${article.date}`}
         </p>
         <h1 className="text-xl font-medium text-zinc-900">
           {pickLang(article.title?.ko, article.title?.en, lang)}

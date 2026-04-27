@@ -58,7 +58,7 @@ export default function LandingHero({ images, fallbackImage }: Props) {
 
         {/* 로고 + 설명 */}
         <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-5">
-          <h1 className="text-3xl font-medium tracking-[0.25em] uppercase text-white mb-4">
+          <h1 className="text-3xl font-medium tracking-[0.25em] uppercase text-white mb-4 select-none">
             Gallery Lili
           </h1>
           <p className="text-sm text-white/60 leading-relaxed">
@@ -105,7 +105,7 @@ export default function LandingHero({ images, fallbackImage }: Props) {
         {/* 중앙 콘텐츠 */}
         <div className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-8">
           <h1
-            className="font-medium tracking-[0.25em] uppercase text-white leading-none mb-6"
+            className="font-medium tracking-[0.25em] uppercase text-white leading-none mb-6 select-none"
             style={{ fontSize: "clamp(2rem, 5vw, 4.5rem)" }}
           >
             Gallery Lili
