@@ -1,224 +1,279 @@
-'use client'
+"use client";
 
-import { useState, useCallback, useEffect, useRef } from 'react'
-import { createPortal } from 'react-dom'
-import Image from 'next/image'
-import { urlFor } from '@/sanity/lib/image'
-import type { SanityImageSource } from '@sanity/image-url/lib/types/types'
+import { useState, useCallback, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
+import Image from "next/image";
+import { urlFor } from "@/sanity/lib/image";
+import { CaretLeftIcon, CaretRightIcon, XIcon } from "@phosphor-icons/react";
+import type { SanityImageSource } from "@sanity/image-url/lib/types/types";
 
 type ArtworkImage = {
-  _key: string
-  asset: SanityImageSource
-  group?: string
-  caption?: string
-}
+  _key: string;
+  asset: SanityImageSource;
+  group?: string;
+  caption?: string;
+};
 
 type Props = {
-  images: ArtworkImage[]
-  alt: string
-  videoSrc?: string | null
-  isVideoFile?: boolean
-  docentSrc?: string | null
-}
+  images: ArtworkImage[];
+  alt: string;
+  videoSrc?: string | null;
+  isVideoFile?: boolean;
+  docentSrc?: string | null;
+};
 
-export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile, docentSrc }: Props) {
-  const goToTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const lbGoToTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+export default function ArtworkCarousel({
+  images,
+  alt,
+  videoSrc,
+  isVideoFile,
+  docentSrc,
+}: Props) {
+  const goToTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lbGoToTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // 메인 캐러셀
-  const [index, setIndex] = useState(0)
-  const [visible, setVisible] = useState(false)
-  const [isPortrait, setIsPortrait] = useState(false)
-  const [isVeryWide, setIsVeryWide] = useState(false)
-  const [blurBgVisible, setBlurBgVisible] = useState(false)
+  const [index, setIndex] = useState(0);
+  const [visible, setVisible] = useState(false);
+  const [isPortrait, setIsPortrait] = useState(false);
+  const [isVeryWide, setIsVeryWide] = useState(false);
+  const [blurBgVisible, setBlurBgVisible] = useState(false);
 
   // 라이트박스
-  const [lightbox, setLightbox] = useState(false)
-  const [lbIndex, setLbIndex] = useState(0)
-  const [lbVisible, setLbVisible] = useState(false)
-  const [lbBlurVisible, setLbBlurVisible] = useState(false)
-  const [lbBlurSize, setLbBlurSize] = useState<{ width: number; height: number } | null>(null)
-  const [lbOverlay, setLbOverlay] = useState(false)
+  const [lightbox, setLightbox] = useState(false);
+  const [lbIndex, setLbIndex] = useState(0);
+  const [lbVisible, setLbVisible] = useState(false);
+  const [lbBlurVisible, setLbBlurVisible] = useState(false);
+  const [lbBlurSize, setLbBlurSize] = useState<{
+    width: number;
+    height: number;
+  } | null>(null);
+  const [lbOverlay, setLbOverlay] = useState(false);
 
   // 비디오
-  const [videoOpen, setVideoOpen] = useState(false)
-  const [videoOverlay, setVideoOverlay] = useState(false)
-  const [videoLoaded, setVideoLoaded] = useState(false)
+  const [videoOpen, setVideoOpen] = useState(false);
+  const [videoOverlay, setVideoOverlay] = useState(false);
+  const [videoLoaded, setVideoLoaded] = useState(false);
 
   // 도슨트
-  const [docentOpen, setDocentOpen] = useState(false)
-  const [docentOverlay, setDocentOverlay] = useState(false)
+  const [docentOpen, setDocentOpen] = useState(false);
+  const [docentOverlay, setDocentOverlay] = useState(false);
 
   useEffect(() => {
     return () => {
-      if (goToTimer.current) clearTimeout(goToTimer.current)
-      if (lbGoToTimer.current) clearTimeout(lbGoToTimer.current)
-    }
-  }, [])
+      if (goToTimer.current) clearTimeout(goToTimer.current);
+      if (lbGoToTimer.current) clearTimeout(lbGoToTimer.current);
+    };
+  }, []);
 
-  const touchStartX = useRef<number | null>(null)
+  const touchStartX = useRef<number | null>(null);
 
   const goTo = useCallback((next: number) => {
-    if (goToTimer.current) clearTimeout(goToTimer.current)
-    setVisible(false)
-    setBlurBgVisible(false)
-    goToTimer.current = setTimeout(() => setIndex(next), 200)
-  }, [])
+    if (goToTimer.current) clearTimeout(goToTimer.current);
+    setVisible(false);
+    setBlurBgVisible(false);
+    goToTimer.current = setTimeout(() => setIndex(next), 200);
+  }, []);
 
   const lbGoTo = useCallback((next: number) => {
-    if (lbGoToTimer.current) clearTimeout(lbGoToTimer.current)
-    setLbVisible(false)
-    setLbBlurVisible(false)
-    setLbBlurSize(null)
-    lbGoToTimer.current = setTimeout(() => setLbIndex(next), 200)
-  }, [])
+    if (lbGoToTimer.current) clearTimeout(lbGoToTimer.current);
+    setLbVisible(false);
+    setLbBlurVisible(false);
+    setLbBlurSize(null);
+    lbGoToTimer.current = setTimeout(() => setLbIndex(next), 200);
+  }, []);
 
   const openLightbox = () => {
-    setLbIndex(index)
-    setLbVisible(false)
-    setLbBlurVisible(false)
-    setLbBlurSize(null)
-    setLbOverlay(false)
-    setLightbox(true)
+    setLbIndex(index);
+    setLbVisible(false);
+    setLbBlurVisible(false);
+    setLbBlurSize(null);
+    setLbOverlay(false);
+    setLightbox(true);
     // double RAF: 첫 번째 프레임에서 opacity:0 상태를 브라우저가 그린 뒤 두 번째 프레임에서 1로 변경해야 transition이 동작함
-    requestAnimationFrame(() => requestAnimationFrame(() => setLbOverlay(true)))
-  }
+    requestAnimationFrame(() =>
+      requestAnimationFrame(() => setLbOverlay(true)),
+    );
+  };
 
   const handleLbBlurLoad = (e: React.SyntheticEvent<HTMLImageElement>) => {
-    setLbBlurVisible(true)
-    const { naturalWidth: nw, naturalHeight: nh } = e.currentTarget
-    const scale = Math.min((window.innerWidth * 0.9) / nw, (window.innerHeight * 0.9) / nh)
-    setLbBlurSize({ width: nw * scale, height: nh * scale })
-  }
+    setLbBlurVisible(true);
+    const { naturalWidth: nw, naturalHeight: nh } = e.currentTarget;
+    const scale = Math.min(
+      (window.innerWidth * 0.9) / nw,
+      (window.innerHeight * 0.9) / nh,
+    );
+    setLbBlurSize({ width: nw * scale, height: nh * scale });
+  };
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') { setLightbox(false); setVideoOpen(false) }
-      if (!lightbox) return
-      if (e.key === 'ArrowRight') lbGoTo((lbIndex + 1) % images.length)
-      if (e.key === 'ArrowLeft') lbGoTo((lbIndex - 1 + images.length) % images.length)
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [lightbox, lbIndex, images.length, lbGoTo])
+      if (e.key === "Escape") {
+        setLightbox(false);
+        setVideoOpen(false);
+      }
+      if (!lightbox) return;
+      if (e.key === "ArrowRight") lbGoTo((lbIndex + 1) % images.length);
+      if (e.key === "ArrowLeft")
+        lbGoTo((lbIndex - 1 + images.length) % images.length);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [lightbox, lbIndex, images.length, lbGoTo]);
 
-  if (!images.length) return null
+  if (!images.length) return null;
 
-  const current = images[index]
-  const lbCurrent = images[lbIndex]
+  const current = images[index];
+  const lbCurrent = images[lbIndex];
 
   return (
     <>
       <div className="flex flex-col gap-4">
         {/* 메인 이미지 */}
-        <div
-          className="relative w-full aspect-4/3 max-h-[60vh] overflow-hidden cursor-zoom-in"
-          onClick={openLightbox}
-          onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX }}
-          onTouchEnd={(e) => {
-            if (touchStartX.current === null || images.length < 2) return
-            const dx = e.changedTouches[0].clientX - touchStartX.current
-            touchStartX.current = null
-            if (Math.abs(dx) < 40) return
-            if (dx < 0) goTo((index + 1) % images.length)
-            else goTo((index - 1 + images.length) % images.length)
-          }}
-        >
-          {/* 블러 배경 */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            key={`bg-${index}`}
-            src={urlFor(current.asset).width(40).url()}
-            alt=""
-            aria-hidden="true"
-            onLoad={() => setBlurBgVisible(true)}
-            style={{
-              position: 'absolute', inset: 0,
-              width: '100%', height: '100%',
-              objectFit: 'cover',
-              filter: 'blur(24px) saturate(1.1)',
-              transform: 'scale(1.1)',
-              opacity: blurBgVisible && (!visible || isPortrait || isVeryWide) ? 1 : 0,
-              transition: 'opacity 0.4s ease',
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => goTo((index - 1 + images.length) % images.length)}
+            className={`hidden md:flex shrink-0 items-center justify-center text-zinc-400 hover:text-zinc-900 transition-colors cursor-pointer ${images.length < 2 ? "invisible" : ""}`}
+            aria-label="이전 이미지"
+          >
+            <CaretLeftIcon size={28} weight="light" />
+          </button>
+          <div
+            className="relative w-full aspect-4/3 max-h-[60vh] overflow-hidden cursor-zoom-in"
+            onClick={openLightbox}
+            onTouchStart={(e) => {
+              touchStartX.current = e.touches[0].clientX;
             }}
-          />
-          <Image
-            key={index}
-            src={urlFor(current.asset).width(900).fit('max').format('webp').quality(80).url()}
-            alt={current.caption ?? alt}
-            fill
-            sizes="(max-width: 768px) 100vw, 60vw"
-            className={(isPortrait || isVeryWide) ? 'object-contain py-3' : 'object-cover'}
-            priority={index === 0}
-            onError={() => setVisible(true)}
-            onLoad={(e) => {
-              const img = e.currentTarget as HTMLImageElement
-              const { naturalWidth: nw, naturalHeight: nh } = img
-              setIsPortrait(nh > nw)
-              setIsVeryWide(nw >= nh * 2)
-              setVisible(true)
+            onTouchEnd={(e) => {
+              if (touchStartX.current === null || images.length < 2) return;
+              const dx = e.changedTouches[0].clientX - touchStartX.current;
+              touchStartX.current = null;
+              if (Math.abs(dx) < 40) return;
+              if (dx < 0) goTo((index + 1) % images.length);
+              else goTo((index - 1 + images.length) % images.length);
             }}
-            style={{ opacity: visible ? 1 : 0, transition: 'opacity 0.4s ease' }}
-          />
+          >
+            {/* 블러 배경 */}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              key={`bg-${index}`}
+              src={urlFor(current.asset).width(40).url()}
+              alt=""
+              aria-hidden="true"
+              onLoad={() => setBlurBgVisible(true)}
+              style={{
+                position: "absolute",
+                inset: 0,
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                filter: "blur(24px) saturate(1.1)",
+                transform: "scale(1.1)",
+                opacity:
+                  blurBgVisible && (!visible || isPortrait || isVeryWide)
+                    ? 1
+                    : 0,
+                transition: "opacity 0.4s ease",
+              }}
+            />
+            <Image
+              key={index}
+              src={urlFor(current.asset)
+                .width(900)
+                .fit("max")
+                .format("webp")
+                .quality(80)
+                .url()}
+              alt={current.caption ?? alt}
+              fill
+              sizes="(max-width: 768px) 100vw, 60vw"
+              className={
+                isPortrait || isVeryWide
+                  ? "object-contain py-3"
+                  : "object-cover"
+              }
+              priority={index === 0}
+              onError={() => setVisible(true)}
+              onLoad={(e) => {
+                const img = e.currentTarget as HTMLImageElement;
+                const { naturalWidth: nw, naturalHeight: nh } = img;
+                setIsPortrait(nh > nw);
+                setIsVeryWide(nw >= nh * 2);
+                setVisible(true);
+              }}
+              style={{
+                opacity: visible ? 1 : 0,
+                transition: "opacity 0.4s ease",
+              }}
+            />
 
-          {images.length > 1 && (
-            <>
-              <button
-                onClick={(e) => { e.stopPropagation(); goTo((index - 1 + images.length) % images.length) }}
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center bg-white/70 hover:bg-white transition-colors text-zinc-800 cursor-pointer"
-                aria-label="이전 이미지"
-              >‹</button>
-              <button
-                onClick={(e) => { e.stopPropagation(); goTo((index + 1) % images.length) }}
-                className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 flex items-center justify-center bg-white/70 hover:bg-white transition-colors text-zinc-800 cursor-pointer"
-                aria-label="다음 이미지"
-              >›</button>
-            </>
-          )}
-
-          <div className="absolute top-3 right-3 flex items-center gap-2">
-            {videoSrc && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setVideoOverlay(false)
-                  setVideoLoaded(false)
-                  setVideoOpen(true)
-                  requestAnimationFrame(() => requestAnimationFrame(() => setVideoOverlay(true)))
-                }}
-                className="flex items-center gap-1.5 px-2.5 py-1.5 bg-white/80 hover:bg-white transition-colors text-zinc-800 text-xs cursor-pointer"
-                aria-label="영상 재생"
-              >
-                <svg width="10" height="12" viewBox="0 0 10 12" fill="currentColor">
-                  <path d="M0 0L10 6L0 12V0Z"/>
-                </svg>
-                Video
-              </button>
-            )}
-            {docentSrc && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setDocentOverlay(false)
-                  setDocentOpen(true)
-                  requestAnimationFrame(() => requestAnimationFrame(() => setDocentOverlay(true)))
-                }}
-                className="flex items-center gap-1.5 px-2.5 py-1.5 bg-white/80 hover:bg-white transition-colors text-zinc-800 text-xs cursor-pointer"
-                aria-label="도슨트 재생"
-              >
-                <svg width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
-                  <path d="M6 0C4.34 0 3 1.34 3 3v4c0 1.66 1.34 3 3 3s3-1.34 3-3V3c0-1.66-1.34-3-3-3z"/>
-                  <path d="M1 6v1c0 2.76 2.24 5 5 5s5-2.24 5-5V6H9.5v1c0 1.93-1.57 3.5-3.5 3.5S2.5 8.93 2.5 7V6H1z"/>
-                </svg>
-                Docent
-              </button>
-            )}
+            <div className="absolute top-3 right-3 flex items-center gap-2">
+              {videoSrc && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setVideoOverlay(false);
+                    setVideoLoaded(false);
+                    setVideoOpen(true);
+                    requestAnimationFrame(() =>
+                      requestAnimationFrame(() => setVideoOverlay(true)),
+                    );
+                  }}
+                  className="flex items-center gap-1.5 px-2.5 py-1.5 bg-white/80 hover:bg-white transition-colors text-zinc-800 text-xs cursor-pointer"
+                  aria-label="영상 재생"
+                >
+                  <svg
+                    width="10"
+                    height="12"
+                    viewBox="0 0 10 12"
+                    fill="currentColor"
+                  >
+                    <path d="M0 0L10 6L0 12V0Z" />
+                  </svg>
+                  Video
+                </button>
+              )}
+              {docentSrc && (
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setDocentOverlay(false);
+                    setDocentOpen(true);
+                    requestAnimationFrame(() =>
+                      requestAnimationFrame(() => setDocentOverlay(true)),
+                    );
+                  }}
+                  className="flex items-center gap-1.5 px-2.5 py-1.5 bg-white/80 hover:bg-white transition-colors text-zinc-800 text-xs cursor-pointer"
+                  aria-label="도슨트 재생"
+                >
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 12 12"
+                    fill="currentColor"
+                  >
+                    <path d="M6 0C4.34 0 3 1.34 3 3v4c0 1.66 1.34 3 3 3s3-1.34 3-3V3c0-1.66-1.34-3-3-3z" />
+                    <path d="M1 6v1c0 2.76 2.24 5 5 5s5-2.24 5-5V6H9.5v1c0 1.93-1.57 3.5-3.5 3.5S2.5 8.93 2.5 7V6H1z" />
+                  </svg>
+                  Docent
+                </button>
+              )}
+            </div>
           </div>
+          <button
+            onClick={() => goTo((index + 1) % images.length)}
+            className={`hidden md:flex shrink-0 items-center justify-center text-zinc-400 hover:text-zinc-900 transition-colors cursor-pointer ${images.length < 2 ? "invisible" : ""}`}
+            aria-label="다음 이미지"
+          >
+            <CaretRightIcon size={28} weight="light" />
+          </button>
         </div>
 
         {(current.caption || current.group) && (
           <p className="text-xs text-zinc-400 text-center">
-            {current.group && <span className="mr-2 text-zinc-500">{current.group}</span>}
+            {current.group && (
+              <span className="mr-2 text-zinc-500">{current.group}</span>
+            )}
             {current.caption}
           </p>
         )}
@@ -229,7 +284,7 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile, do
               <button
                 key={i}
                 onClick={() => goTo(i)}
-                className={`w-1.5 h-1.5 rounded-full transition-colors cursor-pointer ${i === index ? 'bg-zinc-800' : 'bg-zinc-300'}`}
+                className={`w-1.5 h-1.5 rounded-full transition-colors cursor-pointer ${i === index ? "bg-zinc-800" : "bg-zinc-300"}`}
                 aria-label={`이미지 ${i + 1}`}
               />
             ))}
@@ -237,188 +292,322 @@ export default function ArtworkCarousel({ images, alt, videoSrc, isVideoFile, do
         )}
       </div>
 
-      {lightbox && createPortal(
-        <div
-          style={{
-            position: 'fixed', inset: 0, zIndex: 9999,
-            backgroundColor: 'rgba(0,0,0,0.8)',
-            opacity: lbOverlay ? 1 : 0,
-            transition: 'opacity 0.3s ease',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            overflow: 'hidden',
-            cursor: 'default',
-          }}
-          onClick={(e) => { if (e.target === e.currentTarget) setLightbox(false) }}
-          onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX }}
-          onTouchEnd={(e) => {
-            if (touchStartX.current === null || images.length < 2) return
-            const dx = e.changedTouches[0].clientX - touchStartX.current
-            touchStartX.current = null
-            if (Math.abs(dx) < 40) return
-            if (dx < 0) lbGoTo((lbIndex + 1) % images.length)
-            else lbGoTo((lbIndex - 1 + images.length) % images.length)
-          }}
-        >
-          {/* 블러 플레이스홀더 */}
+      {lightbox &&
+        createPortal(
           <div
             style={{
-              position: 'absolute',
-              width: lbBlurSize?.width ?? 0,
-              height: lbBlurSize?.height ?? 0,
-              overflow: 'hidden',
-              opacity: lbBlurVisible && !lbVisible ? 1 : 0,
-              transition: 'opacity 0.4s ease',
-              pointerEvents: 'none',
+              position: "fixed",
+              inset: 0,
+              zIndex: 9999,
+              backgroundColor: "rgba(0,0,0,0.8)",
+              opacity: lbOverlay ? 1 : 0,
+              transition: "opacity 0.3s ease",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              overflow: "hidden",
+              cursor: "default",
+            }}
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setLightbox(false);
+            }}
+            onTouchStart={(e) => {
+              touchStartX.current = e.touches[0].clientX;
+            }}
+            onTouchEnd={(e) => {
+              if (touchStartX.current === null || images.length < 2) return;
+              const dx = e.changedTouches[0].clientX - touchStartX.current;
+              touchStartX.current = null;
+              if (Math.abs(dx) < 40) return;
+              if (dx < 0) lbGoTo((lbIndex + 1) % images.length);
+              else lbGoTo((lbIndex - 1 + images.length) % images.length);
             }}
           >
+            {/* 블러 플레이스홀더 */}
+            <div
+              style={{
+                position: "absolute",
+                width: lbBlurSize?.width ?? 0,
+                height: lbBlurSize?.height ?? 0,
+                overflow: "hidden",
+                opacity: lbBlurVisible && !lbVisible ? 1 : 0,
+                transition: "opacity 0.4s ease",
+                pointerEvents: "none",
+              }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                key={`lb-blur-${lbIndex}`}
+                src={urlFor(lbCurrent.asset).width(40).url()}
+                alt=""
+                aria-hidden="true"
+                onLoad={handleLbBlurLoad}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "fill",
+                  filter: "blur(20px)",
+                  transform: "scale(1.1)",
+                }}
+              />
+            </div>
+
+            {/* 메인 이미지 */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              key={`lb-blur-${lbIndex}`}
-              src={urlFor(lbCurrent.asset).width(40).url()}
-              alt=""
-              aria-hidden="true"
-              onLoad={handleLbBlurLoad}
-              style={{ width: '100%', height: '100%', objectFit: 'fill', filter: 'blur(20px)', transform: 'scale(1.1)' }}
+              key={`lb-${lbIndex}`}
+              src={urlFor(lbCurrent.asset)
+                .width(2400)
+                .fit("max")
+                .format("webp")
+                .quality(85)
+                .url()}
+              alt={lbCurrent.caption ?? alt}
+              onLoad={() => setLbVisible(true)}
+              onError={() => setLbVisible(true)}
+              style={{
+                width: "auto",
+                height: "auto",
+                maxWidth: "90vw",
+                maxHeight: "90vh",
+                cursor: "default",
+                opacity: lbVisible ? 1 : 0,
+                transition: "opacity 0.4s ease",
+              }}
             />
-          </div>
 
-          {/* 메인 이미지 */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            key={`lb-${lbIndex}`}
-            src={urlFor(lbCurrent.asset).width(2400).fit('max').format('webp').quality(85).url()}
-            alt={lbCurrent.caption ?? alt}
-            onLoad={() => setLbVisible(true)}
-            onError={() => setLbVisible(true)}
-            style={{
-              width: 'auto', height: 'auto', maxWidth: '90vw', maxHeight: '90vh',
-              cursor: 'default',
-              opacity: lbVisible ? 1 : 0,
-              transition: 'opacity 0.4s ease',
-            }}
-          />
+            <button
+              onClick={() => setLightbox(false)}
+              style={{
+                position: "absolute",
+                top: 16,
+                right: 16,
+                zIndex: 1,
+                color: "rgba(255,255,255,0.7)",
+                cursor: "pointer",
+                background: "none",
+                border: "none",
+              }}
+              aria-label="닫기"
+            >
+              <XIcon size={22} weight="light" />
+            </button>
 
-          <button
-            onClick={() => setLightbox(false)}
-            style={{ position: 'absolute', top: 16, right: 16, zIndex: 1, color: 'rgba(255,255,255,0.7)', fontSize: 24, cursor: 'pointer', background: 'none', border: 'none' }}
-            aria-label="닫기"
-          >✕</button>
-
-          {images.length > 1 && (
-            <>
-              <button
-                onClick={() => lbGoTo((lbIndex - 1 + images.length) % images.length)}
-                style={{ position: 'absolute', left: 0, top: 0, width: 64, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.7)', fontSize: 32, cursor: 'pointer', background: 'none', border: 'none' }}
-                aria-label="이전 이미지"
-              >‹</button>
-              <button
-                onClick={() => lbGoTo((lbIndex + 1) % images.length)}
-                style={{ position: 'absolute', right: 0, top: 0, width: 64, height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'rgba(255,255,255,0.7)', fontSize: 32, cursor: 'pointer', background: 'none', border: 'none' }}
-                aria-label="다음 이미지"
-              >›</button>
-            </>
-          )}
-        </div>,
-        document.body
-      )}
-
-      {videoOpen && videoSrc && createPortal(
-        <div
-          style={{
-            position: 'fixed', inset: 0, zIndex: 9999,
-            backgroundColor: 'rgba(0,0,0,0.9)',
-            opacity: videoOverlay ? 1 : 0,
-            transition: 'opacity 0.3s ease',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            cursor: 'pointer',
-          }}
-          onClick={() => setVideoOpen(false)}
-        >
-          {!videoLoaded && isVideoFile && (
-            <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center', justifyContent: 'center', pointerEvents: 'none' }}>
-              <div className="spinner" />
-            </div>
-          )}
-
-          <div style={{ maxWidth: '90vw', position: 'relative' }} onClick={(e) => e.stopPropagation()}>
-            {isVideoFile ? (
-              <video
-                src={videoSrc}
-                controls
-                autoPlay
-                playsInline
-                onCanPlay={() => setVideoLoaded(true)}
-                style={{ maxWidth: '90vw', maxHeight: '80vh', display: 'block', opacity: videoLoaded ? 1 : 0, transition: 'opacity 0.6s ease' }}
-              />
-            ) : (
-              <iframe
-                src={(() => {
-                  const m = videoSrc!.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/)
-                  return m ? `https://www.youtube.com/embed/${m[1]}?autoplay=1` : videoSrc!
-                })()}
-                style={{ width: '90vw', maxWidth: 960, aspectRatio: '16/9', border: 'none' }}
-                allow="autoplay; encrypted-media"
-                allowFullScreen
-              />
+            {images.length > 1 && (
+              <>
+                <button
+                  onClick={() =>
+                    lbGoTo((lbIndex - 1 + images.length) % images.length)
+                  }
+                  style={{
+                    position: "absolute",
+                    left: 0,
+                    top: 0,
+                    width: 64,
+                    height: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "rgba(255,255,255,0.7)",
+                    fontSize: 32,
+                    cursor: "pointer",
+                    background: "none",
+                    border: "none",
+                  }}
+                  aria-label="이전 이미지"
+                >
+                  <CaretLeftIcon size={32} weight="thin" />
+                </button>
+                <button
+                  onClick={() => lbGoTo((lbIndex + 1) % images.length)}
+                  style={{
+                    position: "absolute",
+                    right: 0,
+                    top: 0,
+                    width: 64,
+                    height: "100%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "rgba(255,255,255,0.7)",
+                    cursor: "pointer",
+                    background: "none",
+                    border: "none",
+                  }}
+                  aria-label="다음 이미지"
+                >
+                  <CaretRightIcon size={32} weight="thin" />
+                </button>
+              </>
             )}
-          </div>
+          </div>,
+          document.body,
+        )}
 
-          <button
-            onClick={() => setVideoOpen(false)}
-            style={{ position: 'absolute', top: 16, right: 16, color: 'rgba(255,255,255,0.7)', fontSize: 24, cursor: 'pointer', background: 'none', border: 'none' }}
-            aria-label="닫기"
-          >✕</button>
-        </div>,
-        document.body
-      )}
-
-      {docentOpen && docentSrc && createPortal(
-        <div
-          style={{
-            position: 'fixed', inset: 0, zIndex: 9999,
-            backgroundColor: 'rgba(0,0,0,0.9)',
-            opacity: docentOverlay ? 1 : 0,
-            transition: 'opacity 0.3s ease',
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            cursor: 'pointer',
-          }}
-          onClick={() => setDocentOpen(false)}
-        >
+      {videoOpen &&
+        videoSrc &&
+        createPortal(
           <div
-            style={{ width: '90vw', maxWidth: 640 }}
-            onClick={(e) => e.stopPropagation()}
+            style={{
+              position: "fixed",
+              inset: 0,
+              zIndex: 9999,
+              backgroundColor: "rgba(0,0,0,0.9)",
+              opacity: videoOverlay ? 1 : 0,
+              transition: "opacity 0.3s ease",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+            }}
+            onClick={() => setVideoOpen(false)}
           >
-            {(() => {
-              const youtubeMatch = docentSrc.match(/(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/)
-              if (youtubeMatch) {
-                return (
-                  <iframe
-                    src={`https://www.youtube.com/embed/${youtubeMatch[1]}?autoplay=1`}
-                    style={{ width: '100%', aspectRatio: '16/9', border: 'none' }}
-                    allow="autoplay; encrypted-media"
-                    allowFullScreen
-                  />
-                )
-              }
-              return (
+            {!videoLoaded && isVideoFile && (
+              <div
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  pointerEvents: "none",
+                }}
+              >
+                <div className="spinner" />
+              </div>
+            )}
+
+            <div
+              style={{ maxWidth: "90vw", position: "relative" }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {isVideoFile ? (
                 <video
-                  src={docentSrc}
+                  src={videoSrc}
                   controls
                   autoPlay
                   playsInline
-                  style={{ width: '100%', display: 'block' }}
+                  onCanPlay={() => setVideoLoaded(true)}
+                  style={{
+                    maxWidth: "90vw",
+                    maxHeight: "80vh",
+                    display: "block",
+                    opacity: videoLoaded ? 1 : 0,
+                    transition: "opacity 0.6s ease",
+                  }}
                 />
-              )
-            })()}
-          </div>
-          <button
+              ) : (
+                <iframe
+                  src={(() => {
+                    const m = videoSrc!.match(
+                      /(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/,
+                    );
+                    return m
+                      ? `https://www.youtube.com/embed/${m[1]}?autoplay=1`
+                      : videoSrc!;
+                  })()}
+                  style={{
+                    width: "90vw",
+                    maxWidth: 960,
+                    aspectRatio: "16/9",
+                    border: "none",
+                  }}
+                  allow="autoplay; encrypted-media"
+                  allowFullScreen
+                />
+              )}
+            </div>
+
+            <button
+              onClick={() => setVideoOpen(false)}
+              style={{
+                position: "absolute",
+                top: 16,
+                right: 16,
+                color: "rgba(255,255,255,0.7)",
+                fontSize: 24,
+                cursor: "pointer",
+                background: "none",
+                border: "none",
+              }}
+              aria-label="닫기"
+            >
+              ✕
+            </button>
+          </div>,
+          document.body,
+        )}
+
+      {docentOpen &&
+        docentSrc &&
+        createPortal(
+          <div
+            style={{
+              position: "fixed",
+              inset: 0,
+              zIndex: 9999,
+              backgroundColor: "rgba(0,0,0,0.9)",
+              opacity: docentOverlay ? 1 : 0,
+              transition: "opacity 0.3s ease",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              cursor: "pointer",
+            }}
             onClick={() => setDocentOpen(false)}
-            style={{ position: 'absolute', top: 16, right: 16, color: 'rgba(255,255,255,0.7)', fontSize: 24, cursor: 'pointer', background: 'none', border: 'none' }}
-            aria-label="닫기"
-          >✕</button>
-        </div>,
-        document.body
-      )}
+          >
+            <div
+              style={{ width: "90vw", maxWidth: 640 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {(() => {
+                const youtubeMatch = docentSrc.match(
+                  /(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/,
+                );
+                if (youtubeMatch) {
+                  return (
+                    <iframe
+                      src={`https://www.youtube.com/embed/${youtubeMatch[1]}?autoplay=1`}
+                      style={{
+                        width: "100%",
+                        aspectRatio: "16/9",
+                        border: "none",
+                      }}
+                      allow="autoplay; encrypted-media"
+                      allowFullScreen
+                    />
+                  );
+                }
+                return (
+                  <video
+                    src={docentSrc}
+                    controls
+                    autoPlay
+                    playsInline
+                    style={{ width: "100%", display: "block" }}
+                  />
+                );
+              })()}
+            </div>
+            <button
+              onClick={() => setDocentOpen(false)}
+              style={{
+                position: "absolute",
+                top: 16,
+                right: 16,
+                color: "rgba(255,255,255,0.7)",
+                fontSize: 24,
+                cursor: "pointer",
+                background: "none",
+                border: "none",
+              }}
+              aria-label="닫기"
+            >
+              ✕
+            </button>
+          </div>,
+          document.body,
+        )}
     </>
-  )
+  );
 }
