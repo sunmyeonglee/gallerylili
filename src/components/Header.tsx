@@ -21,7 +21,7 @@ export default function Header() {
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 768) setMenuOpen(false);
+      if (window.innerWidth >= 1024) setMenuOpen(false);
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
@@ -69,10 +69,10 @@ export default function Header() {
       }`}
     >
       {/* ── 데스크탑 ── */}
-      <div className="hidden md:flex items-center px-8 py-5 max-w-7xl mx-auto relative">
+      <div className="hidden lg:flex items-center px-8 py-7 max-w-7xl mx-auto relative">
         <Link
           href="/works"
-          className={`text-base font-medium tracking-[0.25em] uppercase transition-colors duration-300 ${textColor}`}
+          className={`text-2xl font-medium tracking-[0.25em] uppercase transition-colors duration-300 ${textColor}`}
           onClick={() => setMenuOpen(false)}
         >
           Gallery Lili
@@ -96,10 +96,10 @@ export default function Header() {
       </div>
 
       {/* ── 모바일 공통 ── */}
-      <div className="md:hidden flex items-center justify-between px-5 py-6">
+      <div className="lg:hidden flex items-center justify-between px-5 py-7">
         <Link
           href="/works"
-          className={`text-base font-medium tracking-[0.25em] uppercase transition-colors duration-300 ${textColor}`}
+          className={`text-2xl font-medium tracking-[0.25em] uppercase transition-colors duration-300 ${textColor}`}
           onClick={() => setMenuOpen(false)}
         >
           Gallery Lili
@@ -159,7 +159,7 @@ export default function Header() {
 
       {/* 모바일 메뉴 */}
       {menuOpen && (
-        <nav className="md:hidden flex flex-col px-5 pb-8 gap-6 max-w-7xl mx-auto bg-white">
+        <nav className="lg:hidden flex flex-col px-5 pb-8 gap-6 max-w-7xl mx-auto bg-white">
           {navLinks.map(({ href, label }) => (
             <Link
               key={href}

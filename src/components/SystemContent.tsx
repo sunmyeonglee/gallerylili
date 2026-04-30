@@ -2,9 +2,28 @@
 
 import { useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
-import { CompassToolIcon, HandshakeIcon } from "@phosphor-icons/react";
+import {
+  CompassToolIcon,
+  HandshakeIcon,
+  GaugeIcon,
+  GearIcon,
+  LightningIcon,
+  LightbulbIcon,
+  ArrowsClockwiseIcon,
+  MonitorIcon,
+} from "@phosphor-icons/react";
 
-export default function SystemContent() {
+type Props = {
+  rateBasic?: string;
+  rateStandard?: string;
+  ratePremium?: string;
+};
+
+export default function SystemContent({
+  rateBasic = "~10%",
+  rateStandard = "~20%",
+  ratePremium = "~30%",
+}: Props) {
   const { lang } = useLanguage();
   const isKo = lang === "ko";
   const [tab, setTab] = useState<"commission" | "rental">("commission");
@@ -206,39 +225,30 @@ export default function SystemContent() {
       name: "Basic",
       visit: isKo ? "연 2회 방문 점검" : "2 site visits per year",
       support: isKo ? "원격 기술 지원" : "Basic technical support",
-      rate: "~10%",
+      rate: rateBasic,
     },
     {
       name: "Standard",
       visit: isKo ? "연 4회 방문 점검" : "4 site visits per year",
       support: isKo ? "소모품 교체 포함" : "Parts replacement included",
-      rate: "~20%",
+      rate: rateStandard,
     },
     {
       name: "Premium",
       visit: isKo ? "연 12회 방문 점검" : "12 site visits per year",
       support: isKo ? "긴급 대응 포함" : "Priority & emergency support",
-      rate: "~30%",
+      rate: ratePremium,
     },
   ];
 
-  const serviceIncludes = isKo
-    ? [
-        "작동 상태 점검 및 성능 테스트",
-        "기계 및 구동부 테스트",
-        "전기 / 전자 시스템 점검",
-        "조명 및 전기 시스템 점검",
-        "소모품 교체 (Plan에 따라 상이)",
-        "원격 모니터링 및 지원",
-      ]
-    : [
-        "Operational inspection",
-        "Mechanical & drive system test",
-        "Electrical / electronic system test",
-        "Lighting & power system test",
-        "Parts replacement (as needed)",
-        "Remote monitoring & support",
-      ];
+  const serviceIncludesData = [
+    { icon: GaugeIcon,          ko: "작동 상태 점검 및 성능 테스트", en: "Operational inspection" },
+    { icon: GearIcon,           ko: "기계 및 구동부 테스트",        en: "Mechanical & drive system test" },
+    { icon: LightningIcon,      ko: "전기 / 전자 시스템 점검",      en: "Electrical / electronic system test" },
+    { icon: LightbulbIcon,      ko: "조명 및 전기 시스템 점검",     en: "Lighting & power system test" },
+    { icon: ArrowsClockwiseIcon,ko: "소모품 교체 (Plan에 따라 상이)", en: "Parts replacement (as needed)" },
+    { icon: MonitorIcon,        ko: "원격 모니터링 및 지원",        en: "Remote monitoring & support" },
+  ];
 
   return (
     <div className="space-y-20 md:space-y-28">
@@ -524,22 +534,21 @@ export default function SystemContent() {
         </div>
 
         {/* 서비스 포함 항목 */}
-        <div>
-          <p className="text-xs tracking-widest uppercase text-zinc-400 mb-6">
+        <div className="bg-zinc-50 p-8">
+          <p className="text-xs tracking-widest uppercase text-zinc-400 mb-8">
             {isKo ? "서비스 포함 항목" : "Service Includes"}
           </p>
-          <ul className="space-y-3 mb-10">
-            {serviceIncludes.map((item) => (
-              <li
-                key={item}
-                className="flex items-start gap-3 text-sm text-zinc-600"
-              >
-                <span className="mt-2 w-1 h-1 rounded-full bg-zinc-400 shrink-0" />
-                {item}
-              </li>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mb-8">
+            {serviceIncludesData.map(({ icon: Icon, ko, en }) => (
+              <div key={ko} className="flex items-start gap-3">
+                <Icon size={18} weight="light" className="text-zinc-400 shrink-0 mt-0.5" />
+                <span className="text-sm text-zinc-600 leading-snug break-keep">
+                  {isKo ? ko : en}
+                </span>
+              </div>
             ))}
-          </ul>
-          <p className="text-sm text-zinc-500 leading-relaxed break-keep">
+          </div>
+          <p className="text-sm text-zinc-400 leading-relaxed break-keep border-t border-zinc-200 pt-6">
             {isKo
               ? "각 프로젝트의 비용은 설치 환경, 작품의 난이도, 규모에 따라 협의됩니다."
               : "Project budgets are determined based on installation conditions, complexity, and scale."}

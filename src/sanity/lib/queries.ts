@@ -7,7 +7,10 @@ export const SITE_SETTINGS_QUERY = defineQuery(`
       landingImageWorks.asset->url,
       landingImageMedia.asset->url,
       landingImageAbout.asset->url
-    ]
+    ],
+    maintenanceRateBasic,
+    maintenanceRateStandard,
+    maintenanceRatePremium
   }
 `)
 
