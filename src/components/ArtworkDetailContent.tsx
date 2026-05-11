@@ -20,10 +20,13 @@ type Props = {
   year: string | null | undefined;
   medium: BilingualField;
   dimensions: { ko?: string; en?: string } | null | undefined;
+  location: BilingualField;
   description: BilingualField;
   images: ArtworkImage[];
   videoFile: { asset: { url: string } } | null | undefined;
   videoUrl: string | null | undefined;
+  docentFile: { asset: { url: string } } | null | undefined;
+  docentUrl: string | null | undefined;
 };
 
 export default function ArtworkDetailContent({
@@ -32,10 +35,13 @@ export default function ArtworkDetailContent({
   year,
   medium,
   dimensions,
+  location,
   description,
   images,
   videoFile,
   videoUrl,
+  docentFile,
+  docentUrl,
 }: Props) {
   const { lang } = useLanguage();
 
@@ -44,65 +50,62 @@ export default function ArtworkDetailContent({
   const dimensionStr = dimensions ? pickLang(dimensions.ko, dimensions.en, lang) : null
 
   const videoSrc = videoFile?.asset?.url ?? videoUrl ?? null;
-  const labelCol = lang === "ko" ? "3.5rem 1fr" : "6rem 1fr";
+  const docentSrc = docentFile?.asset?.url ?? docentUrl ?? null;
 
   return (
     <div className="flex flex-col gap-10">
       {/* 캐러셀 */}
       {images?.length > 0 && (
-        <ArtworkCarousel images={images} alt={titleMain} videoSrc={videoSrc} isVideoFile={!!videoFile} />
+        <ArtworkCarousel images={images} alt={titleMain} videoSrc={videoSrc} isVideoFile={!!videoFile} docentSrc={docentSrc} />
       )}
 
-      {/* 작품 정보 */}
-      <div className="flex flex-col gap-6 max-w-lg mx-auto w-full">
-        <div>
+      {/* 작품 정보 — 캐러셀 화살표 spacer로 이미지 폭에 맞춤 */}
+      <div className="flex items-start gap-3">
+        <div className="hidden md:block w-8 shrink-0" />
+        <div className="flex flex-col gap-6 flex-1">
           <h1 className="text-xl font-medium text-zinc-900">{titleMain}</h1>
+
+          {/* 메타 — 테이블 형식 */}
+          <dl className="border border-zinc-200 grid grid-cols-2 md:flex md:divide-x md:divide-zinc-200">
+            {(artist?.name?.ko || artist?.name?.en) && (
+              <div className="flex flex-col px-4 py-3 border-b border-r border-zinc-200 md:border-b-0 md:border-r-0 md:px-5">
+                <dt className="text-xs text-zinc-400 mb-1 text-center">{t(ui.artwork.artist, lang)}</dt>
+                <dd className="text-sm text-zinc-900 text-center">{pickLang(artist.name?.ko, artist.name?.en, lang)}</dd>
+              </div>
+            )}
+            {year && (
+              <div className="flex flex-col px-4 py-3 border-b border-zinc-200 md:border-b-0 md:border-l md:border-l-zinc-200 md:px-5">
+                <dt className="text-xs text-zinc-400 mb-1 text-center">{t(ui.artwork.year, lang)}</dt>
+                <dd className="text-sm text-zinc-900 text-center">{year}</dd>
+              </div>
+            )}
+            {(medium?.ko || medium?.en) && (
+              <div className="flex flex-col flex-1 px-4 py-3 border-b border-r border-zinc-200 md:border-b-0 md:border-r-0 md:border-l md:border-l-zinc-200 md:px-5">
+                <dt className="text-xs text-zinc-400 mb-1 text-center">{t(ui.artwork.medium, lang)}</dt>
+                <dd className="text-sm text-zinc-900 text-center break-keep">{pickLang(medium?.ko, medium?.en, lang)}</dd>
+              </div>
+            )}
+            {dimensionStr && (
+              <div className="flex flex-col px-4 py-3 border-b border-zinc-200 md:border-b-0 md:border-l md:border-l-zinc-200 md:px-5">
+                <dt className="text-xs text-zinc-400 mb-1 text-center">{t(ui.artwork.dimensions, lang)}</dt>
+                <dd className="text-sm text-zinc-900 text-center">{dimensionStr}</dd>
+              </div>
+            )}
+            {(location?.ko || location?.en) && (
+              <div className="flex flex-col flex-1 col-span-2 px-4 py-3 md:col-span-1 md:border-l md:border-l-zinc-200 md:px-5">
+                <dt className="text-xs text-zinc-400 mb-1 text-center">{lang === "ko" ? "위치" : "Location"}</dt>
+                <dd className="text-sm text-zinc-900 text-center break-keep">{pickLang(location?.ko, location?.en, lang)}</dd>
+              </div>
+            )}
+          </dl>
+
+          {(description?.ko || description?.en) && (
+            <p className="text-sm text-zinc-600 leading-7 whitespace-pre-line mt-6">
+              {pickLang(description?.ko, description?.en, lang)}
+            </p>
+          )}
         </div>
-
-        <dl className="flex flex-col gap-2 text-sm">
-          {(artist?.name?.ko || artist?.name?.en) && (
-            <div className="grid gap-3" style={{ gridTemplateColumns: labelCol }}>
-              <dt className="text-zinc-400">
-                {t(ui.artwork.artist, lang)}
-              </dt>
-              <dd className="text-zinc-700">
-                {pickLang(artist.name?.ko, artist.name?.en, lang)}
-              </dd>
-            </div>
-          )}
-          {year && (
-            <div className="grid gap-3" style={{ gridTemplateColumns: labelCol }}>
-              <dt className="text-zinc-400">
-                {t(ui.artwork.year, lang)}
-              </dt>
-              <dd className="text-zinc-700">{year}</dd>
-            </div>
-          )}
-          {(medium?.ko || medium?.en) && (
-            <div className="grid gap-3" style={{ gridTemplateColumns: labelCol }}>
-              <dt className="text-zinc-400">
-                {t(ui.artwork.medium, lang)}
-              </dt>
-              <dd className="text-zinc-700">
-                {pickLang(medium?.ko, medium?.en, lang)}
-              </dd>
-            </div>
-          )}
-          {dimensionStr && (
-            <div className="grid gap-3" style={{ gridTemplateColumns: labelCol }}>
-              <dt className="text-zinc-400">
-                {t(ui.artwork.dimensions, lang)}
-              </dt>
-              <dd className="text-zinc-700">{dimensionStr}</dd>
-            </div>
-          )}
-        </dl>
-
-        {(description?.ko || description?.en) && (
-          <p className="text-sm text-zinc-600 leading-7 whitespace-pre-line">
-            {pickLang(description?.ko, description?.en, lang)}
-          </p>
-        )}
+        <div className="hidden md:block w-8 shrink-0" />
       </div>
     </div>
   );

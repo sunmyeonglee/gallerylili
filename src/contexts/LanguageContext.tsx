@@ -16,29 +16,25 @@ const LanguageContext = createContext<LanguageContextType>({
   toggleLang: () => {},
 })
 
-export function LanguageProvider({ children }: { children: ReactNode }) {
-  const [lang, setLangState] = useState<Lang>('ko')
-  const [mounted, setMounted] = useState(false)
+export function LanguageProvider({ initialLang, children }: { initialLang: Lang; children: ReactNode }) {
+  const [lang, setLangState] = useState<Lang>(initialLang)
 
   useEffect(() => {
-    const saved = localStorage.getItem('gallerylili-lang') as Lang | null
-    if (saved === 'ko' || saved === 'en') {
-      setLangState(saved)
-    } else {
+    // 쿠키에 저장된 값이 없을 때만 브라우저 언어로 보정
+    const cookie = document.cookie.split('; ').find(r => r.startsWith('lang='))
+    if (!cookie) {
       const browserLang = navigator.language.toLowerCase()
-      setLangState(browserLang.startsWith('ko') ? 'ko' : 'en')
+      const detected = browserLang.startsWith('ko') ? 'ko' : 'en'
+      setLang(detected)
     }
-    setMounted(true)
   }, [])
 
   const setLang = (next: Lang) => {
-    localStorage.setItem('gallerylili-lang', next)
+    document.cookie = `lang=${next}; path=/; max-age=${60 * 60 * 24 * 365}; SameSite=Lax`
     setLangState(next)
   }
 
   const toggleLang = () => setLang(lang === 'ko' ? 'en' : 'ko')
-
-  if (!mounted) return null
 
   return (
     <LanguageContext.Provider value={{ lang, setLang, toggleLang }}>

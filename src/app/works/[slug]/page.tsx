@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { client } from "@/sanity/lib/client";
+import { draftMode } from "next/headers";
+import { client, draftClient } from "@/sanity/lib/client";
 import { ARTWORK_DETAIL_QUERY, ARTWORK_META_QUERY, ARTWORK_SLUGS_QUERY } from "@/sanity/lib/queries";
 import ArtworkDetailContent from "@/components/ArtworkDetailContent";
 
@@ -41,7 +42,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ArtworkPage({ params }: Props) {
   const { slug } = await params;
-  const artwork = await client.fetch(ARTWORK_DETAIL_QUERY, { slug });
+  const { isEnabled } = await draftMode();
+  const artwork = await (isEnabled ? draftClient : client).fetch(ARTWORK_DETAIL_QUERY, { slug });
 
   if (!artwork) notFound();
 
@@ -70,7 +72,7 @@ export default async function ArtworkPage({ params }: Props) {
   };
 
   return (
-    <main className="pt-28 pb-24 px-5 md:px-8 max-w-5xl mx-auto">
+    <main className="pt-28 md:pt-32 pb-24 px-5 md:px-8 max-w-7xl mx-auto">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -81,10 +83,13 @@ export default async function ArtworkPage({ params }: Props) {
         year={artwork.year}
         medium={artwork.medium}
         dimensions={artwork.dimensions}
+        location={artwork.location}
         description={artwork.description}
         images={artwork.images ?? []}
         videoFile={artwork.videoFile}
         videoUrl={artwork.videoUrl}
+        docentFile={artwork.docentFile}
+        docentUrl={artwork.docentUrl}
       />
     </main>
   );

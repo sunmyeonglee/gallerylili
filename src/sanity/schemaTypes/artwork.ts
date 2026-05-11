@@ -117,6 +117,14 @@ export const artwork = defineType({
       validation: (r) => r.required().min(1),
     }),
 
+    // ── Selected Installations 포함 여부 ──────────────────
+    defineField({
+      name: "featured",
+      title: "Selected Installations에 포함",
+      type: "boolean",
+      initialValue: false,
+    }),
+
     // ── 설치 장소 ─────────────────────────────────────────
     defineField({
       name: "location",
@@ -136,6 +144,22 @@ export const artwork = defineType({
           description: "예: Bayer Headquarters, Leverkusen, Germany",
         }),
       ],
+    }),
+
+    // ── 도슨트 ────────────────────────────────────────────
+    defineField({
+      name: "docentFile",
+      title: "도슨트 파일",
+      type: "file",
+      options: { accept: "video/*,audio/*" },
+      description: "mp4, mp3 등 파일 업로드",
+    }),
+
+    defineField({
+      name: "docentUrl",
+      title: "도슨트 URL",
+      type: "url",
+      description: "YouTube / 외부 링크 (파일이 없을 때 사용)",
     }),
 
     // ── 영상 ──────────────────────────────────────────────
