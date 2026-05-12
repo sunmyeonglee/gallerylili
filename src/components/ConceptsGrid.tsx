@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { pickLang } from "@/lib/translations";
@@ -17,6 +18,7 @@ export default function ConceptsGrid({
   projects: ConceptProject[];
 }) {
   const { lang } = useLanguage();
+  const [touchedId, setTouchedId] = useState<string | null>(null);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-x-5 gap-y-16">
@@ -28,17 +30,21 @@ export default function ConceptsGrid({
           lang,
         );
         const image = project.images?.[0];
+        const isTouched = touchedId === project._id;
 
         return (
           <div key={project._id}>
             {/* 이미지 */}
-            <div className="relative aspect-video bg-zinc-100 overflow-hidden mb-6">
+            <div
+              className="group relative aspect-video bg-zinc-100 overflow-hidden mb-6"
+              onTouchStart={() => setTouchedId(project._id)}
+            >
               {image && (
                 <Image
                   src={image}
                   alt={title ?? ""}
                   fill
-                  className="object-cover"
+                  className={`object-cover transition-all duration-500 ${isTouched ? "grayscale-0" : "grayscale md:group-hover:grayscale-0"}`}
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />
               )}
