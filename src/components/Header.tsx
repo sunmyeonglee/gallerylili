@@ -71,7 +71,7 @@ export default function Header() {
       {/* ── 데스크탑 ── */}
       <div className="hidden lg:flex items-center px-8 py-7 max-w-7xl mx-auto relative">
         <Link
-          href="/works"
+          href="/"
           className={`text-lg md:text-2xl font-medium tracking-[0.25em] uppercase transition-colors duration-300 ${textColor}`}
           onClick={() => setMenuOpen(false)}
         >
@@ -98,7 +98,7 @@ export default function Header() {
       {/* ── 모바일 공통 ── */}
       <div className="lg:hidden flex items-center justify-between px-5 py-7">
         <Link
-          href="/works"
+          href="/"
           className={`text-lg md:text-2xl font-medium tracking-[0.25em] uppercase transition-colors duration-300 ${textColor}`}
           onClick={() => setMenuOpen(false)}
         >

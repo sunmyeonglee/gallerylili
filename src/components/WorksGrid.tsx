@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useLanguage } from '@/contexts/LanguageContext'
@@ -22,11 +23,19 @@ type Props = {
 
 export default function WorksGrid({ artworks }: Props) {
   const { lang } = useLanguage()
+  const [touchedId, setTouchedId] = useState<string | null>(null)
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-12">
-      {artworks.map((artwork, i) => (
-        <Link key={artwork._id} href={`/works/${artwork.slug}`} className="group block">
+      {artworks.map((artwork, i) => {
+        const isTouched = touchedId === artwork._id
+        return (
+        <Link
+          key={artwork._id}
+          href={`/works/${artwork.slug}`}
+          className="group block"
+          onTouchStart={() => setTouchedId(artwork._id)}
+        >
           <div className="relative aspect-4/3 overflow-hidden bg-zinc-100">
             {artwork.image && (
               <Image
@@ -35,7 +44,7 @@ export default function WorksGrid({ artworks }: Props) {
                 fill
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 priority={i < 3}
-                className="object-cover md:grayscale transition-all duration-500 md:group-hover:grayscale-0"
+                className={`object-cover transition-all duration-500 ${isTouched ? 'grayscale-0' : 'grayscale md:group-hover:grayscale-0'}`}
                 onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
               />
             )}
@@ -52,7 +61,8 @@ export default function WorksGrid({ artworks }: Props) {
             )}
           </div>
         </Link>
-      ))}
+        )
+      })}
     </div>
   )
 }

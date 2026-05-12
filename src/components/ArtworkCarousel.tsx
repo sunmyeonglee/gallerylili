@@ -486,6 +486,7 @@ export default function ArtworkCarousel({
                   src={videoSrc}
                   controls
                   autoPlay
+                  muted
                   playsInline
                   onCanPlay={() => setVideoLoaded(true)}
                   style={{
