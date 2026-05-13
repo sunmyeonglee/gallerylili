@@ -1,6 +1,7 @@
 'use client'
 
 import { useLanguage } from '@/contexts/LanguageContext'
+import { EnvelopeSimpleIcon, PhoneIcon, InstagramLogoIcon } from '@phosphor-icons/react'
 
 const content = {
   ko: {
@@ -113,15 +114,26 @@ export default function AboutContent() {
           <div className="flex flex-col gap-2">
             <a
               href="mailto:lili@gallerylili.com"
-              className="text-sm text-zinc-700 hover:text-zinc-900 transition-colors"
+              className="flex items-center gap-2 text-sm text-zinc-700 hover:text-zinc-900 transition-colors"
             >
+              <EnvelopeSimpleIcon size={15} weight="light" />
               lili@gallerylili.com
             </a>
             <a
               href="tel:+821052786053"
-              className="text-sm text-zinc-700 hover:text-zinc-900 transition-colors"
+              className="flex items-center gap-2 text-sm text-zinc-700 hover:text-zinc-900 transition-colors"
             >
+              <PhoneIcon size={15} weight="light" />
               +82-10-5278-6053
+            </a>
+            <a
+              href="https://www.instagram.com/gal_lerylili/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 text-sm text-zinc-700 hover:text-zinc-900 transition-colors"
+            >
+              <InstagramLogoIcon size={15} weight="light" />
+              @gal_lerylili
             </a>
           </div>
         </section>
