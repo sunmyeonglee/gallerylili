@@ -504,7 +504,7 @@ export default function ArtworkCarousel({
                       /(?:v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/,
                     );
                     return m
-                      ? `https://www.youtube.com/embed/${m[1]}?autoplay=1`
+                      ? `https://www.youtube.com/embed/${m[1]}?autoplay=1&mute=1`
                       : videoSrc!;
                   })()}
                   style={{
