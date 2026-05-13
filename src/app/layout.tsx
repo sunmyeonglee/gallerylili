@@ -1,10 +1,9 @@
 import type { Metadata } from "next";
 import { DM_Sans } from "next/font/google";
 import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
-import { draftMode, cookies } from "next/headers";
+import { cookies } from "next/headers";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import Header from "@/components/Header";
-import DraftModeBanner from "@/components/DraftModeBanner";
 import Footer from "@/components/Footer";
 import PageTransition from "@/components/PageTransition";
 import NextTopLoader from "nextjs-toploader";
@@ -60,9 +59,6 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { isEnabled } = await draftMode();
-  const isDev = process.env.NODE_ENV === "development";
-  const secret = process.env.DRAFT_MODE_SECRET ?? "";
   const cookieStore = await cookies();
   const langCookie = cookieStore.get("lang")?.value;
   const initialLang = langCookie === "en" ? "en" : "ko";
@@ -73,7 +69,6 @@ export default async function RootLayout({
         className={`${dmSans.variable} font-sans antialiased`}
         suppressHydrationWarning
       >
-        {isDev && <DraftModeBanner isEnabled={isEnabled} secret={secret} />}
         <LanguageProvider initialLang={initialLang}>
           <NextTopLoader color="#18181b" height={2} showSpinner={false} />
           <Header />

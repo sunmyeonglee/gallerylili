@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { draftMode } from "next/headers";
-import { client, draftClient } from "@/sanity/lib/client";
+import { client } from "@/sanity/lib/client";
 import { SITE_SETTINGS_QUERY } from "@/sanity/lib/queries";
 import LandingHero from "@/components/LandingHero";
 
@@ -24,10 +23,7 @@ const jsonLd = {
 };
 
 export default async function HomePage() {
-  const { isEnabled } = await draftMode();
-  const settings = await (isEnabled ? draftClient : client).fetch(
-    SITE_SETTINGS_QUERY,
-  );
+  const settings = await client.fetch(SITE_SETTINGS_QUERY);
 
   const fallbackImage: string | null = settings?.heroImageUrl ?? null;
   const images: (string | null)[] = settings?.landingImages ?? [

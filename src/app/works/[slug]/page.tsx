@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { draftMode } from "next/headers";
-import { client, draftClient } from "@/sanity/lib/client";
+import { client } from "@/sanity/lib/client";
 import { ARTWORK_DETAIL_QUERY, ARTWORK_META_QUERY, ARTWORK_SLUGS_QUERY } from "@/sanity/lib/queries";
 import ArtworkDetailContent from "@/components/ArtworkDetailContent";
 
@@ -42,8 +41,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ArtworkPage({ params }: Props) {
   const { slug } = await params;
-  const { isEnabled } = await draftMode();
-  const artwork = await (isEnabled ? draftClient : client).fetch(ARTWORK_DETAIL_QUERY, { slug });
+  const artwork = await client.fetch(ARTWORK_DETAIL_QUERY, { slug });
 
   if (!artwork) notFound();
 

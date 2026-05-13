@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { draftMode } from "next/headers";
-import { client, draftClient } from "@/sanity/lib/client";
+import { client } from "@/sanity/lib/client";
 import { CONCEPT_PROJECTS_QUERY } from "@/sanity/lib/queries";
 import ConceptsGrid from "@/components/ConceptsGrid";
 import PageHeader from "@/components/PageHeader";
@@ -13,8 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ConceptsPage() {
-  const { isEnabled } = await draftMode();
-  const projects = await (isEnabled ? draftClient : client).fetch(CONCEPT_PROJECTS_QUERY);
+  const projects = await client.fetch(CONCEPT_PROJECTS_QUERY);
 
   return (
     <main className="pt-28 md:pt-32 pb-24 px-5 md:px-8 max-w-7xl mx-auto">

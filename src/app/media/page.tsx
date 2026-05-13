@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
-import { draftMode } from 'next/headers'
-import { client, draftClient } from '@/sanity/lib/client'
+import { client } from '@/sanity/lib/client'
 import { PRESS_QUERY, VIDEOS_QUERY } from '@/sanity/lib/queries'
 import PressSection from '@/components/PressSection'
 import VideosSection from '@/components/VideosSection'
@@ -14,12 +13,9 @@ export const metadata: Metadata = {
 }
 
 export default async function MediaPage() {
-  const { isEnabled } = await draftMode()
-  const c = isEnabled ? draftClient : client
-
   const [press, videos] = await Promise.all([
-    c.fetch(PRESS_QUERY),
-    c.fetch(VIDEOS_QUERY),
+    client.fetch(PRESS_QUERY),
+    client.fetch(VIDEOS_QUERY),
   ])
 
   return (
